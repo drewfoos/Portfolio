@@ -1,12 +1,9 @@
 // app/layout.tsx
 import './globals.css';
-import { Inter } from 'next/font/google';
 import Navbar from '@/components/layout/navbar';
 import Footer from '@/components/layout/footer';
 import SocialSidebar from '@/components/layout/socialSidebar';
 import { Toaster } from "react-hot-toast";
-
-const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

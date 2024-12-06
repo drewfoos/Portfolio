@@ -17,10 +17,11 @@ export default function Projects({ projects }: ProjectsProps) {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
-    const checkScroll = () => {
-      if (!scrollContainerRef.current) return;
+    const scrollElement = scrollContainerRef.current;
+    if (!scrollElement) return;
 
-      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+    const checkScroll = () => {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollElement;
       const maxScroll = scrollWidth - clientWidth;
 
       setCanScrollLeft(scrollLeft > 0);
@@ -31,10 +32,10 @@ export default function Projects({ projects }: ProjectsProps) {
     };
 
     checkScroll();
-    scrollContainerRef.current?.addEventListener('scroll', checkScroll);
+    scrollElement.addEventListener('scroll', checkScroll);
 
     return () => {
-      scrollContainerRef.current?.removeEventListener('scroll', checkScroll);
+      scrollElement.removeEventListener('scroll', checkScroll);
     };
   }, []);
 
@@ -51,7 +52,15 @@ export default function Projects({ projects }: ProjectsProps) {
     });
   };
 
-  const ProjectLink = ({ href, icon: Icon, text }: { href: string; icon: any; text: string }) => (
+  const ProjectLink = ({
+    href,
+    icon: Icon,
+    text,
+  }: {
+    href: string;
+    icon: typeof Github; // Correctly use `typeof` to type the Icon prop
+    text: string;
+  }) => (
     <a
       href={href}
       target="_blank"
