@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
-import { FigmaIcon, ArrowLeft, ArrowRight, Globe, FileText } from 'lucide-react';
+import { FigmaIcon, ArrowLeft, ArrowRight, Globe, FileText, Github } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Project } from '@/types/project';
@@ -64,7 +64,7 @@ export default function Projects({ projects }: ProjectsProps) {
   );
 
   return (
-    <section className="relative overflow-hidden pt-8 md:pt-20 pb-8 md:pb-20">
+    <section className="relative overflow-hidden py-12 md:py-20">
       <div className="px-4 mb-6 md:mb-10">
         <h2 className="text-2xl md:text-4xl font-bold text-white text-center md:text-left md:hidden">
           Featured Projects
@@ -106,6 +106,9 @@ export default function Projects({ projects }: ProjectsProps) {
                   {project.paperUrl && (
                     <ProjectLink href={project.paperUrl} icon={FileText} text="Read Paper" />
                   )}
+                  {project.codeUrl && (
+                    <ProjectLink href={project.codeUrl} icon={Github} text="View on GitHub" />
+                  )}
                 </div>
               </div>
               <div className="p-4 md:p-8">
@@ -138,24 +141,24 @@ export default function Projects({ projects }: ProjectsProps) {
       </div>
 
       {/* Navigation buttons - Hidden on mobile, visible on tablets and up */}
-      <div className="hidden md:flex justify-center gap-4 mt-8">
+      <div className="hidden md:flex justify-center gap-6 mt-6">
         <Button
           variant="ghost"
           onClick={() => scroll('left')}
-          className="text-white hover:bg-white/10"
+          className="text-white hover:bg-white/10 text-lg px-8 py-6 h-auto"
           disabled={!canScrollLeft}
         >
-          <ArrowLeft className="h-5 w-5 mr-2" />
+          <ArrowLeft className="h-6 w-6 mr-3" />
           Previous
         </Button>
         <Button
           variant="ghost"
           onClick={() => scroll('right')}
-          className="text-white hover:bg-white/10"
+          className="text-white hover:bg-white/10 text-lg px-8 py-6 h-auto"
           disabled={!canScrollRight}
         >
           Next
-          <ArrowRight className="h-5 w-5 ml-2" />
+          <ArrowRight className="h-6 w-6 ml-3" />
         </Button>
       </div>
     </section>

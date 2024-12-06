@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -69,4 +65,26 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Accessibility Styles */
+:root {
+  --font-dyslexic: var(--font-dyslexic);
+  transition: font-size 0.3s ease;
+}
+
+.high-contrast {
+  filter: contrast(150%) brightness(120%);
+}
+
+:root.dyslexic-font * {
+  font-family: var(--font-dyslexic) !important;
+  letter-spacing: 0.05em;
+  word-spacing: 0.1em;
+  line-height: 1.5;
+}
+
+/* Optional: Smooth transitions for all accessibility changes */
+body {
+  transition: filter 0.3s ease, font-family 0.3s ease;
 }

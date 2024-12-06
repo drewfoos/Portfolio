@@ -17,12 +17,22 @@ export default {
         animation: {
           scroll: 'scroll 1.5s ease infinite'
         },
-		fontFamily: {
-			axiforma: ['var(--font-axiforma)'],
-		  },
+        fontFamily: {
+          axiforma: ['var(--font-axiforma)'],
+        },
         colors: {
             background: 'hsl(var(--background))',
             foreground: 'hsl(var(--foreground))',
+            // Add our custom colors
+            bg: {
+              main: 'hsl(var(--bg-main))',
+              secondary: 'hsl(var(--bg-secondary))',
+            },
+            brand: {
+              blue: 'hsl(var(--primary-blue))',
+              purple: 'hsl(var(--primary-purple))',
+            },
+            // Existing colors
             card: {
                 DEFAULT: 'hsl(var(--card))',
                 foreground: 'hsl(var(--card-foreground))'

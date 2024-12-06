@@ -14,7 +14,7 @@ export const Hero: FC = () => {
   const headlineWords = ['Discover,', 'Design,', 'Develop,', 'Stand out.'];
   
   return (
-    <section className={`${axiforma.variable} min-h-screen bg-[#0B0B0B] relative overflow-hidden`}>
+    <section className={`${axiforma.variable} min-h-screen bg-[#0B0B0B] relative overflow-hidden pb-12 md:pb-16`}>
       {/* Mountain Background */}
       <div className="absolute inset-x-0 top-[60%] h-[60vh] -translate-y-[10%] pointer-events-none z-0 overflow-hidden">
         <div className="relative w-full left-0 top-0 h-full">

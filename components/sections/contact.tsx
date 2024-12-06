@@ -56,7 +56,7 @@ export const Contact = () => {
   };
 
   return (
-    <section className={`${axiforma.variable} relative w-full bg-[#0B0B0B] pt-20 pb-20 px-4`}>
+    <section className={`${axiforma.variable} relative w-full bg-[#0B0B0B] py-12 md:py-20 px-4`}>
       <div className="relative mx-auto max-w-[1325px]">
         <div className="flex flex-col lg:flex-row lg:justify-between gap-12">
           {/* Title Section */}

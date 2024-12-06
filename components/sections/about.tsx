@@ -1,8 +1,8 @@
-// components/sections/About.tsx
 'use client';
 import { motion, useInView } from 'framer-motion';
 import { useState, useRef } from 'react';
 import { axiforma } from '@/app/fonts';
+import { FileText } from 'lucide-react';
 
 interface WordReveal {
   original: string;
@@ -22,7 +22,7 @@ export const About = () => {
   const isInView = useInView(educationRef, { once: true, amount: 0.3 });
 
   return (
-    <section className={`${axiforma.variable} bg-[#0B0B0B] relative pt-20 px-4 overflow-hidden`}>
+    <section className={`${axiforma.variable} bg-[#0B0B0B] relative py-12 md:py-20 px-4 overflow-hidden`}>
       {/* Content */}
       <div className="max-w-4xl mx-auto relative z-10">
         <motion.div
@@ -134,6 +134,24 @@ export const About = () => {
                 />
               </div>
             </div>
+          </motion.div>
+
+          {/* Resume Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.8, delay: 0.9 }}
+            className="pt-4"
+          >
+            <a
+              href="https://drive.google.com/file/d/1IT00V56PgbhBglOof1YXX53c2-jNnULh/view?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 text-white font-medium bg-white/10 px-8 py-4 rounded-full backdrop-blur-sm hover:bg-white/20 transition-all group"
+            >
+              <FileText className="w-6 h-6 transition-transform group-hover:scale-110" />
+              <span className="text-lg">View Resume</span>
+            </a>
           </motion.div>
         </motion.div>
       </div>

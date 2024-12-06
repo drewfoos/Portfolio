@@ -36,11 +36,21 @@ export const projects: Project[] = [
     imageUrl: "/projects/goalquest mockup.png",
     category: "Productivity",
     tags: ["Next.js", "Productivity", "Goal Setting"],
-    liveUrl: "https://goalquest.vercel.app/"
+    liveUrl: "https://goalquest.vercel.app/",
+    codeUrl: "https://github.com/drewfoos/GoalQuest"
   },
-
   {
     id: 5,
+    title: "This Portfolio",
+    description: "This portfolio showcases my projects, including the source code and Figma design. It highlights my design and development skills, combining intuitive visuals with functional coding.",
+    imageUrl: "/projects/portfolio mockup.jpeg",
+    category: "Web Design",
+    tags: ["Portfolio", "Web Development", "Figma"],
+    figmaUrl: "https://www.figma.com/proto/ADhCcsvFvRKjnFBau1MTbX/Andrew-portfolio?node-id=7-6104&t=4Jo11UcLXNWwM2BZ-1",
+    codeUrl: "https://github.com/drewfoos/Portfolio"
+  },    
+  {
+    id: 6,
     title: "RiftRadar Game Analytics",
     description: "A real-time analytics platform providing game statistics and performance insights for League of Legends players. RiftRadar helps players refine strategies, track progression, and understand gameplay dynamics through intuitive visualizations.",
     imageUrl: "/projects/riftradar mockup.jpeg",
@@ -48,4 +58,5 @@ export const projects: Project[] = [
     tags: ["Gaming", "Analytics", "HCI"],
     liveUrl: "https://www.youtube.com/watch?v=9upWENE6zN4"
   },
+  
 ] 

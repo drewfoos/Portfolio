@@ -9,4 +9,5 @@ export interface Project {
     figmaUrl?: string;
     liveUrl?: string;
     paperUrl?: string;
-  }
+    codeUrl?: string;
+}
