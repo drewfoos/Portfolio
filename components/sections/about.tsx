@@ -38,7 +38,7 @@ export const About = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Hi, I'm Andrew Dryfoos
+              Hi, I&apos;m Andrew Dryfoos
             </motion.h2>
             
             <motion.p 
@@ -47,7 +47,7 @@ export const About = () => {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              I'm a developer who loves to{' '}
+              I&apos;m a developer who loves to{' '}
               <span
                 className="relative inline-block whitespace-nowrap cursor-expand"
                 onMouseEnter={() => setHoveredIndex(0)}
@@ -114,7 +114,7 @@ export const About = () => {
             </h3>
             <div className="space-y-3">
               <div className="border-l-2 border-white/20 pl-4">
-                <h4 className="text-xl font-medium">Master's in Interactive Media</h4>
+                <h4 className="text-xl font-medium">Master&apos;s in Interactive Media</h4>
                 <p className="text-gray-400">Elon University, 2024</p>
                 <motion.div
                   initial={{ width: 0 }}
@@ -124,7 +124,7 @@ export const About = () => {
                 />
               </div>
               <div className="border-l-2 border-white/20 pl-4">
-                <h4 className="text-xl font-medium">Bachelor's in Computer Science</h4>
+                <h4 className="text-xl font-medium">Bachelor&apos;s in Computer Science</h4>
                 <p className="text-gray-400">Elon University, 2013</p>
                 <motion.div
                   initial={{ width: 0 }}

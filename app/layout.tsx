@@ -4,7 +4,6 @@ import { Inter } from 'next/font/google';
 import Navbar from '@/components/layout/navbar';
 import Footer from '@/components/layout/footer';
 import SocialSidebar from '@/components/layout/socialSidebar';
-import GlowingCursor from '@/components/ui/GlowingCursor';
 import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ['latin'] });
@@ -12,7 +11,7 @@ const inter = Inter({ subsets: ['latin'] });
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.className} cursor-none`}>
+      <body>
         <Toaster
           position="top-center"
           toastOptions={{
@@ -26,7 +25,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navbar />
         <main>{children}</main>
         <Footer />
-        <GlowingCursor />
       </body>
     </html>
   );

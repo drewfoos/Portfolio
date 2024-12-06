@@ -35,21 +35,38 @@ export const Contact = () => {
     setIsLoading(true);
 
     try {
+      // Ensure all required environment variables are available
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+      if (!serviceId || !templateId || !publicKey) {
+        toast.error("Email service is not properly configured. Please try again later.");
+        setIsLoading(false);
+        return;
+      }
+
       await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        serviceId,
+        templateId,
         {
           from_name: formData.name,
           reply_to: formData.email,
           message: formData.message,
         },
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+        publicKey
       );
 
       toast.success("Message sent successfully! A confirmation email has been sent.");
       setFormData({ name: '', email: '', message: '' });
-    } catch (error) {
-      toast.error("Error sending message. Please try again later.");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        // Using the error variable to provide a detailed error message to toast
+        toast.error(`Error: ${error.message}. Please try again later.`);
+      } else {
+        // Fallback message if error doesn't have a useful message
+        toast.error("Error sending message. Please try again later.");
+      }
     } finally {
       setIsLoading(false);
     }

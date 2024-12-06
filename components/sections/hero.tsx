@@ -1,27 +1,33 @@
-// components/sections/Hero.tsx
-'use client'
+'use client';
+
 import { motion } from 'framer-motion';
 import { axiforma } from '@/app/fonts';
 import { type FC } from 'react';
+import Image from 'next/image';
 
 const GradientGlow: FC = () => (
-  <div className="w-[25vw] max-w-[300px] h-[25vw] max-h-[300px] rounded-full opacity-80">
+  <div
+    className="w-[25vw] max-w-[300px] h-[25vw] max-h-[300px] rounded-full opacity-80"
+    aria-hidden="true"
+  >
     <div className="w-full h-full bg-gradient-to-br from-[#1919A7] to-[#D017B8] blur-[150px] mix-blend-screen" />
   </div>
 );
 
 export const Hero: FC = () => {
   const headlineWords = ['Discover,', 'Design,', 'Develop,', 'Stand out.'];
-  
+
   return (
     <section className={`${axiforma.variable} min-h-screen bg-[#0B0B0B] relative overflow-hidden pb-12 md:pb-16`}>
       {/* Mountain Background */}
       <div className="absolute inset-x-0 top-[60%] h-[60vh] -translate-y-[10%] pointer-events-none z-0 overflow-hidden">
         <div className="relative w-full left-0 top-0 h-full">
-          <img
+          <Image
             src="/Bg.svg"
-            alt="Mountain Background"
-            className="absolute inset-0 w-full h-full object-cover opacity-100 mix-blend-normal"
+            alt="Illustration of a mountain landscape in the background"
+            fill
+            className="absolute inset-0 object-cover opacity-100 mix-blend-normal"
+            priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-50" />
         </div>
@@ -32,7 +38,7 @@ export const Hero: FC = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1.2, ease: "easeInOut" }}
+          transition={{ duration: 1.2, ease: 'easeInOut' }}
           className="w-full max-w-[1200px] mx-auto relative"
         >
           {/* Gradient Glows */}
@@ -45,9 +51,9 @@ export const Hero: FC = () => {
           <h1 className="text-center font-axiforma font-medium uppercase">
             <div className="text-[clamp(4rem,15vw,12rem)] leading-[0.9] tracking-[-0.08em] relative">
               {headlineWords.map((word, index) => (
-                <div key={index}>
-                  <span className="text-white">{word}</span>
-                </div>
+                <span key={index} className="block text-white">
+                  {word}
+                </span>
               ))}
             </div>
           </h1>

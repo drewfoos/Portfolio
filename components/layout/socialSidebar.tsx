@@ -1,19 +1,18 @@
 'use client'
 
-import type { FC } from 'react'
-import { GithubIcon, LinkedinIcon, Mail, Terminal, Glasses } from 'lucide-react'
-import { useState } from 'react'
+import type { FC } from 'react';
+import { GithubIcon, LinkedinIcon, Mail, Terminal, Glasses } from 'lucide-react';
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { openDyslexic } from '@/app/fonts'
+} from "@/components/ui/popover";
 
 type Command = {
   command: string;
@@ -38,7 +37,6 @@ const SocialSidebar: FC = () => {
   const [showSecret, setShowSecret] = useState(false);
   const [input, setInput] = useState('');
   const [history, setHistory] = useState<HistoryEntry[]>([]);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
   const [dyslexicFont, setDyslexicFont] = useState(false);
 
   const handleCommand = (cmd: string) => {
@@ -54,7 +52,7 @@ const SocialSidebar: FC = () => {
     if (command) {
       newHistory.push({ type: 'output', content: command.response });
     } else {
-      newHistory.push({ type: 'output', content: `Command not found: ${cmd}. Type 'help' for available commands.` });
+      newHistory.push({ type: 'output', content: `Command not found: ${cmd}. Type &apos;help&apos; for available commands.` });
     }
     
     setHistory(newHistory);
@@ -195,7 +193,7 @@ const SocialSidebar: FC = () => {
         <DialogTitle className="sr-only">Terminal Window</DialogTitle>
         <DialogContent className="bg-[#0B0B0B] border-purple-600 max-w-2xl">
           <div className="font-mono space-y-4 max-h-[60vh] overflow-y-auto">
-            <p className="text-purple-600">Welcome to the terminal! Type 'help' for available commands.</p>
+            <p className="text-purple-600">Welcome to the terminal! Type &apos;help&apos; for available commands.</p>
             
             {history.map((entry, index) => (
               <div key={index} className={entry.type === 'input' ? 'text-purple-600' : 'text-white ml-4'}>
@@ -218,17 +216,11 @@ const SocialSidebar: FC = () => {
                 autoFocus
               />
             </div>
-            
-            {suggestions.length > 0 && (
-              <div className="text-gray-500 text-sm">
-                Suggestions: {suggestions.join(', ')}
-              </div>
-            )}
           </div>
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }
 
-export default SocialSidebar
+export default SocialSidebar;
