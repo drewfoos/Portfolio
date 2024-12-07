@@ -1,5 +1,4 @@
 'use client';
-
 import { motion } from 'framer-motion';
 import { axiforma } from '@/app/fonts';
 import { type FC } from 'react';
@@ -16,9 +15,19 @@ const GradientGlow: FC = () => (
 
 export const Hero: FC = () => {
   const headlineWords = ['Discover,', 'Design,', 'Develop,', 'Stand out.'];
-
+  
   return (
-    <section className={`${axiforma.variable} min-h-screen bg-[#0B0B0B] relative overflow-hidden pb-12 md:pb-16`}>
+    <section className={`
+      ${axiforma.variable} 
+      min-h-screen 
+      bg-[#0B0B0B] 
+      relative 
+      overflow-hidden 
+      pb-12 
+      md:pb-16
+      landscape:pb-0
+      landscape:h-screen
+    `}>
       {/* Mountain Background */}
       <div className="absolute inset-x-0 top-[60%] h-[60vh] -translate-y-[10%] pointer-events-none z-0 overflow-hidden">
         <div className="relative w-full left-0 top-0 h-full">
@@ -49,7 +58,7 @@ export const Hero: FC = () => {
 
           {/* Headline Text */}
           <h1 className="text-center font-axiforma font-medium uppercase">
-            <div className="text-[clamp(4rem,15vw,12rem)] leading-[0.9] tracking-[-0.08em] relative">
+            <div className="text-[clamp(4rem,15vw,12rem)] leading-[0.9] tracking-[-0.08em] relative landscape:text-[clamp(4rem,15vh,12rem)]">
               {headlineWords.map((word, index) => (
                 <span key={index} className="block text-white">
                   {word}

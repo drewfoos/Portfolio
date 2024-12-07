@@ -1,5 +1,4 @@
 'use client'
-
 import { useState } from 'react';
 import { Menu } from 'lucide-react';
 import {
@@ -7,7 +6,7 @@ import {
   NavigationMenuList,
   NavigationMenuItem,
   NavigationMenuLink,
-} from '@/components/ui/navigation-menu'; // Adjust the path as necessary
+} from '@/components/ui/navigation-menu';
 
 export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,11 +16,11 @@ export default function NavBar() {
   };
 
   return (
-    <nav className="absolute top-0 right-0 p-8 w-full z-30">
+    <nav className="absolute top-0 right-0 z-30 p-6 md:p-8">
       {/* Desktop NavigationMenu */}
-      <div className="hidden md:flex justify-end">
-        <NavigationMenu className="flex items-center">
-          <NavigationMenuList className="space-x-8 text-lg">
+      <div className="hidden md:block">
+        <NavigationMenu>
+          <NavigationMenuList className="flex items-center space-x-8 text-lg">
             <NavigationMenuItem>
               <NavigationMenuLink href="#about" className="text-white hover:text-[#D017B8] transition-colors">
                 About Me
@@ -52,11 +51,11 @@ export default function NavBar() {
       </div>
 
       {/* Mobile Hamburger Menu */}
-      <div className="md:hidden flex justify-end">
+      <div className="md:hidden">
         <button
           onClick={toggleMenu}
           aria-label="Toggle Menu"
-          className="text-white"
+          className="text-white p-2"
         >
           <Menu size={28} />
         </button>
@@ -64,21 +63,21 @@ export default function NavBar() {
 
       {/* Mobile Menu Content */}
       {isOpen && (
-        <div className="absolute top-full right-0 w-full bg-[#0B0B0B] p-8 text-white md:hidden">
+        <div className="absolute top-full right-0 w-screen bg-[#0B0B0B]/95 backdrop-blur-sm p-6 text-white md:hidden">
           <div className="flex flex-col space-y-4">
-            <a href="#about" onClick={toggleMenu} className="hover:text-[#D017B8] transition-colors">
+            <a href="#about" onClick={toggleMenu} className="hover:text-[#D017B8] transition-colors py-2">
               About Me
             </a>
-            <a href="#projects" onClick={toggleMenu} className="hover:text-[#D017B8] transition-colors">
+            <a href="#projects" onClick={toggleMenu} className="hover:text-[#D017B8] transition-colors py-2">
               Projects
             </a>
-            <a href="#tech-stack" onClick={toggleMenu} className="hover:text-[#D017B8] transition-colors">
+            <a href="#tech-stack" onClick={toggleMenu} className="hover:text-[#D017B8] transition-colors py-2">
               Tech Stack
             </a>
-            <a href="#skills" onClick={toggleMenu} className="hover:text-[#D017B8] transition-colors">
+            <a href="#skills" onClick={toggleMenu} className="hover:text-[#D017B8] transition-colors py-2">
               Skills
             </a>
-            <a href="#experience" onClick={toggleMenu} className="hover:text-[#D017B8] transition-colors">
+            <a href="#experience" onClick={toggleMenu} className="hover:text-[#D017B8] transition-colors py-2">
               Experience
             </a>
           </div>
