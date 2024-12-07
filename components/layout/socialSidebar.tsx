@@ -1,12 +1,13 @@
 'use client'
 
 import type { FC } from 'react';
-import { GithubIcon, LinkedinIcon, Mail, Terminal, Glasses } from 'lucide-react';
+import { GithubIcon, LinkedinIcon, Mail, Terminal, Glasses, X } from 'lucide-react';
 import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogTitle,
+  DialogHeader,
 } from "@/components/ui/dialog";
 import {
   Popover,
@@ -38,6 +39,7 @@ const SocialSidebar: FC = () => {
   const [input, setInput] = useState('');
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [dyslexicFont, setDyslexicFont] = useState(false);
+  const [tabIndex, setTabIndex] = useState(-1);
 
   const handleCommand = (cmd: string) => {
     const newHistory: HistoryEntry[] = [...history, { type: 'input', content: `$ ${cmd}` }];
@@ -52,11 +54,28 @@ const SocialSidebar: FC = () => {
     if (command) {
       newHistory.push({ type: 'output', content: command.response });
     } else {
-      newHistory.push({ type: 'output', content: `Command not found: ${cmd}. Type &apos;help&apos; for available commands.` });
+      newHistory.push({ type: 'output', content: `Command not found: ${cmd}. Type 'help' for available commands.` });
     }
     
     setHistory(newHistory);
     setInput('');
+    setTabIndex(-1);
+  };
+
+  const handleTabCompletion = (currentInput: string) => {
+    const matchingCommands = COMMANDS
+      .map(c => c.command)
+      .filter(cmd => cmd.startsWith(currentInput.toLowerCase()));
+
+    if (matchingCommands.length > 0) {
+      if (tabIndex === -1 || tabIndex >= matchingCommands.length) {
+        setTabIndex(0);
+        setInput(matchingCommands[0]);
+      } else {
+        setTabIndex(tabIndex + 1);
+        setInput(matchingCommands[tabIndex] || matchingCommands[0]);
+      }
+    }
   };
 
   const increaseTextSize = () => {
@@ -88,6 +107,33 @@ const SocialSidebar: FC = () => {
 
   return (
     <>
+      <style jsx global>{`
+        .terminal-scroll::-webkit-scrollbar {
+          width: 8px;
+        }
+        
+        .terminal-scroll::-webkit-scrollbar-track {
+          background: #0B0B0B;
+          border-radius: 4px;
+        }
+        
+        .terminal-scroll::-webkit-scrollbar-thumb {
+          background: #9333ea;
+          border-radius: 4px;
+          transition: background-color 0.2s;
+        }
+        
+        .terminal-scroll::-webkit-scrollbar-thumb:hover {
+          background: #a855f7;
+        }
+
+        /* Firefox */
+        .terminal-scroll {
+          scrollbar-width: thin;
+          scrollbar-color: #9333ea #0B0B0B;
+        }
+      `}</style>
+
       <aside className="fixed left-4 top-1/4 z-50 hidden lg:block">
         <div className="flex flex-col space-y-4">
           <a
@@ -190,10 +236,22 @@ const SocialSidebar: FC = () => {
       </aside>
 
       <Dialog open={showSecret} onOpenChange={setShowSecret}>
-        <DialogTitle className="sr-only">Terminal Window</DialogTitle>
         <DialogContent className="bg-[#0B0B0B] border-purple-600 max-w-2xl">
-          <div className="font-mono space-y-4 max-h-[60vh] overflow-y-auto">
-            <p className="text-purple-600">Welcome to the terminal! Type &apos;help&apos; for available commands.</p>
+          <DialogHeader>
+            <div className="flex justify-between items-center">
+              <DialogTitle className="text-purple-600">Terminal</DialogTitle>
+              <button
+                onClick={() => setShowSecret(false)}
+                className="text-gray-400 hover:text-white transition-colors"
+                aria-label="Close terminal"
+              >
+                <X size={20} />
+              </button>
+            </div>
+          </DialogHeader>
+          
+          <div className="font-mono space-y-4 max-h-[60vh] overflow-y-auto terminal-scroll">
+            <p className="text-purple-600">Welcome to the terminal! Type 'help' for available commands.</p>
             
             {history.map((entry, index) => (
               <div key={index} className={entry.type === 'input' ? 'text-purple-600' : 'text-white ml-4'}>
@@ -206,10 +264,16 @@ const SocialSidebar: FC = () => {
               <input
                 type="text"
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  setTabIndex(-1);
+                }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && input.trim()) {
                     handleCommand(input.trim());
+                  } else if (e.key === 'Tab') {
+                    e.preventDefault();
+                    handleTabCompletion(input.trim());
                   }
                 }}
                 className="flex-1 bg-transparent border-none outline-none text-white ml-2 focus:ring-0"
