@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 
 export const Contact = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [honeypot, setHoneypot] = useState(''); // Honeypot state
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -18,6 +19,10 @@ export const Contact = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    if (name === 'hiddenField') {
+      setHoneypot(value);
+      return;
+    }
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -26,6 +31,13 @@ export const Contact = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Check honeypot field first
+    if (honeypot.trim() !== '') {
+      // If honeypot is filled, likely spam, abort submission
+      toast.error("Something went wrong. Please try again.");
+      return;
+    }
 
     if (!formData.name || !formData.email || !formData.message) {
       toast.error("Please fill out all fields before submitting.");
@@ -56,7 +68,7 @@ export const Contact = () => {
         publicKey
       );
 
-      toast.success("Message sent successfully! A confirmation email has been sent.");
+      toast.success("Message sent successfully!");
       setFormData({ name: '', email: '', message: '' });
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -83,6 +95,20 @@ export const Contact = () => {
           {/* Form Section */}
           <div className="w-full lg:w-[632px]">
             <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
+              {/* Honeypot field - hidden from real users */}
+              <div className="hidden">
+                <label htmlFor="hiddenField">Do not fill this field</label>
+                <input
+                  type="text"
+                  name="hiddenField"
+                  id="hiddenField"
+                  value={honeypot}
+                  onChange={handleChange}
+                  autoComplete="off"
+                  tabIndex={-1}
+                />
+              </div>
+
               <div>
                 <label
                   htmlFor="name"
