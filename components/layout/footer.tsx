@@ -39,7 +39,7 @@ export const Footer = () => {
             className="flex items-center gap-3 hover:text-purple-400 transition-colors"
           >
             <MailIcon className="w-5 h-5" />
-            <span className="text-sm sm:text-base">dryfoos@gmail.com</span>
+            <span className="text-sm sm:text-base">dryfoosa@gmail.com</span>
           </a>
 
           <div className="hidden sm:block text-white/20">|</div>

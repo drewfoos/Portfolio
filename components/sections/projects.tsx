@@ -197,7 +197,7 @@ export default function Projects({ projects }: ProjectsProps) {
                 height: maxCardHeight ? `${maxCardHeight}px` : 'auto',
               }}
             >
-              {/* Keep the image section separate and prevent shrinking */}
+              {/* Image stays at the top, fixed aspect ratio */}
               <div className="relative aspect-[16/9] overflow-hidden flex-shrink-0">
                 <Image
                   src={project.imageUrl}
@@ -214,13 +214,17 @@ export default function Projects({ projects }: ProjectsProps) {
                 </div>
               </div>
 
-              {/* Content section: flex-grow to fill remaining space, and mt-auto for tags */}
-              <div className="p-4 md:p-6 flex flex-col flex-grow">
-                <h3 className="text-xl font-semibold text-white">{project.title}</h3>
-                <p className="mt-2 text-gray-400 text-base">
-                  {project.description}
-                </p>
-                <div className="mt-auto flex gap-2 flex-wrap">
+              {/* Content section arranged in a column, justify-between for spacing */}
+              <div className="p-4 md:p-6 flex flex-col flex-grow justify-between">
+                <div>
+                  <h3 className="text-xl font-semibold text-white">{project.title}</h3>
+                  <p className="mt-2 text-gray-400 text-base">
+                    {project.description}
+                  </p>
+                </div>
+
+                {/* Add mt-4 to create vertical space between description and tags */}
+                <div className="flex gap-2 flex-wrap mt-4">
                   {project.tags.map((tag) => (
                     <span
                       key={tag}
