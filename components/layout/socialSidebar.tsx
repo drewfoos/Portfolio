@@ -1,53 +1,69 @@
-'use client'
+"use client";
 
-import type { FC } from 'react';
-import { GithubIcon, LinkedinIcon, Mail, Terminal, Glasses, X, ChevronRight } from 'lucide-react';
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import toast from 'react-hot-toast';
+import type { FC } from "react";
+import {
+  GithubIcon,
+  LinkedinIcon,
+  Mail,
+  Terminal,
+  Glasses,
+  X,
+  ChevronRight,
+} from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogHeader,
-  DialogDescription
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 type Command = {
   command: string;
   response: string;
-}
+};
 
 type HistoryEntry = {
-  type: 'input' | 'output';
+  type: "input" | "output";
   content: string;
-}
+};
 
 const COMMANDS: Command[] = [
-  { command: 'help', response: 'Available commands: help, whoami, about, skills, contact, clear' },
-  { command: 'whoami', response: 'andrew.dryfoos' },
-  { command: 'about', response: 'Full-stack developer passionate about creating meaningful user experiences.' },
-  { command: 'skills', response: 'JavaScript, TypeScript, React, Next.js, and a love for League of Legends!' },
-  { command: 'contact', response: 'Email: dryfoosa@gmail.com\nGitHub: github.com/drewfoos' },
-  { command: 'clear', response: '' },
+  {
+    command: "help",
+    response: "Available commands: help, whoami, about, skills, contact, clear",
+  },
+  { command: "whoami", response: "andrew.dryfoos" },
+  {
+    command: "about",
+    response:
+      "Full-stack developer passionate about creating meaningful user experiences.",
+  },
+  {
+    command: "skills",
+    response:
+      "JavaScript, TypeScript, React, Next.js, and a love for League of Legends!",
+  },
+  {
+    command: "contact",
+    response: "Email: dryfoosa@gmail.com\nGitHub: github.com/drewfoos",
+  },
+  { command: "clear", response: "" },
 ];
 
 const GRACE_PERIOD = 500; // ms
 
 const SocialSidebar: FC = () => {
   const [showSecret, setShowSecret] = useState(false);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [dyslexicFont, setDyslexicFont] = useState(false);
   const [tabIndex, setTabIndex] = useState(-1);
@@ -66,100 +82,121 @@ const SocialSidebar: FC = () => {
   const email = "dryfoosa@gmail.com";
 
   const attemptCollapse = useCallback(() => {
-    console.log("attemptCollapse called. Conditions:", {
-      heroVisible,
-      isHovering,
-      isAnyPanelOpen
-    });
-  
     if (!heroVisible && !isAnyPanelOpen) {
       if (hoverOutTimeout.current) {
         clearTimeout(hoverOutTimeout.current);
         hoverOutTimeout.current = null;
       }
-  
+
       if (isHovering) {
-        console.log("No hero, no panel, but was hovering. Starting grace period...");
         hoverOutTimeout.current = setTimeout(() => {
-          console.log("Grace period ended. Setting isHovering(false).");
-          setIsHovering(false);
+          // Only collapse if we're not hovering over the sidebar and no panels are open
+          if (!sidebarRef.current?.matches(":hover") && !isAnyPanelOpen) {
+            setIsHovering(false);
+          }
           hoverOutTimeout.current = null;
         }, GRACE_PERIOD);
       } else {
-        console.log("No hero, no panel, not hovering. Collapsing immediately.");
         setIsHovering(false);
       }
     } else {
-      console.log("Conditions for collapse not met. Doing nothing.");
       if (hoverOutTimeout.current) {
         clearTimeout(hoverOutTimeout.current);
         hoverOutTimeout.current = null;
       }
     }
   }, [heroVisible, isHovering, isAnyPanelOpen]);
-  
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         const wasVisible = heroVisible;
         const nowVisible = entry.isIntersecting;
-        setHeroVisible(nowVisible);
-  
+
         if (wasVisible && !nowVisible) {
-          console.log("Hero became invisible. Attempting collapse after reflow...");
-          requestAnimationFrame(() => attemptCollapse());
+          setIsEmailDropdownOpen(false);
+          setIsAccessibilityOpen(false);
+          setIsHovering(false);
         }
+
+        setHeroVisible(nowVisible);
       },
       { threshold: 0.1 }
     );
-  
-    const heroSection = document.getElementById('hero');
+
+    const heroSection = document.getElementById("hero");
     if (heroSection) {
       observer.observe(heroSection);
     }
-  
+
     return () => {
       if (heroSection) observer.unobserve(heroSection);
     };
-  }, [heroVisible, attemptCollapse]);
-  
-  
+  }, [heroVisible]);
 
   useEffect(() => {
     const html = document.documentElement;
-    html.classList.remove('font-size-scale-0', 'font-size-scale-1', 'font-size-scale-2');
+    html.classList.remove(
+      "font-size-scale-0",
+      "font-size-scale-1",
+      "font-size-scale-2"
+    );
     html.classList.add(`font-size-scale-${fontScale}`);
   }, [fontScale]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
+        if (!heroVisible && !isAnyPanelOpen) {
+          setIsHovering(false);
+        }
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [heroVisible, isAnyPanelOpen]);
 
   const preventDefaultMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
   };
 
   const handleCommand = (cmd: string) => {
-    const newHistory: HistoryEntry[] = [...history, { type: 'input', content: `$ ${cmd}` }];
+    const newHistory: HistoryEntry[] = [
+      ...history,
+      { type: "input", content: `$ ${cmd}` },
+    ];
 
-    if (cmd.toLowerCase() === 'clear') {
+    if (cmd.toLowerCase() === "clear") {
       setHistory([]);
-      setInput('');
+      setInput("");
       return;
     }
 
-    const command = COMMANDS.find(c => c.command === cmd.toLowerCase());
+    const command = COMMANDS.find((c) => c.command === cmd.toLowerCase());
     if (command) {
-      newHistory.push({ type: 'output', content: command.response });
+      newHistory.push({ type: "output", content: command.response });
     } else {
-      newHistory.push({ type: 'output', content: `Command not found: ${cmd}. Type &apos;help&apos; for available commands.` });
+      newHistory.push({
+        type: "output",
+        content: `Command not found: ${cmd}. Type &apos;help&apos; for available commands.`,
+      });
     }
 
     setHistory(newHistory);
-    setInput('');
+    setInput("");
     setTabIndex(-1);
   };
 
   const handleTabCompletion = (currentInput: string) => {
-    const matchingCommands = COMMANDS
-      .map(c => c.command)
-      .filter(cmd => cmd.startsWith(currentInput.toLowerCase()));
+    const matchingCommands = COMMANDS.map((c) => c.command).filter((cmd) =>
+      cmd.startsWith(currentInput.toLowerCase())
+    );
 
     if (matchingCommands.length > 0) {
       const newTabIndex = (tabIndex + 1) % matchingCommands.length;
@@ -178,17 +215,20 @@ const SocialSidebar: FC = () => {
 
   const toggleDyslexicFont = () => {
     setDyslexicFont(!dyslexicFont);
-    document.documentElement.classList.toggle('dyslexic-font');
+    document.documentElement.classList.toggle("dyslexic-font");
   };
 
   const toggleHighContrast = () => {
-    document.documentElement.classList.toggle('high-contrast');
+    document.documentElement.classList.toggle("high-contrast");
   };
 
   const handleCopyEmail = () => {
-    navigator.clipboard.writeText(email)
+    navigator.clipboard
+      .writeText(email)
       .then(() => toast.success("Email address copied to clipboard!"))
-      .catch(() => toast.error("Failed to copy email address. Please try again."));
+      .catch(() =>
+        toast.error("Failed to copy email address. Please try again.")
+      );
   };
 
   const isSidebarExpanded = heroVisible || isHovering || isAnyPanelOpen;
@@ -198,53 +238,48 @@ const SocialSidebar: FC = () => {
       clearTimeout(hoverOutTimeout.current);
       hoverOutTimeout.current = null;
     }
-    console.log("Mouse entered sidebar. isHovering=true");
     setIsHovering(true);
   };
 
   const handleMouseLeave = () => {
-    console.log("Mouse left sidebar. Attempting collapse after reflow...");
-    requestAnimationFrame(() => attemptCollapse());
+    if (!heroVisible && !isAnyPanelOpen) {
+      requestAnimationFrame(() => attemptCollapse());
+    }
   };
 
   const handleEmailDropdownChange = (open: boolean) => {
-    console.log("Email dropdown changed:", open);
     setIsEmailDropdownOpen(open);
+    // Don't collapse if we're hovering over the sidebar
     if (!open) {
-      console.log("Email dropdown closed. Attempting collapse after reflow...");
-      // If conditions are met right now, collapse immediately
-      if (!heroVisible && !isAnyPanelOpen) {
-        console.log("No hero, no panels. Collapsing immediately.");
-        setIsHovering(false);
-      } else {
-        requestAnimationFrame(() => attemptCollapse());
-      }
+      setTimeout(() => {
+        if (
+          !heroVisible &&
+          !isAccessibilityOpen &&
+          !sidebarRef.current?.matches(":hover")
+        ) {
+          setIsHovering(false);
+        }
+      }, 50);
     }
   };
 
   const handleAccessibilityChange = (open: boolean) => {
-    console.log("Accessibility popup changed:", open);
     setIsAccessibilityOpen(open);
+    // Don't collapse if we're hovering over the sidebar
     if (!open) {
-      console.log("Accessibility popup closed. Attempting collapse after reflow...");
-      // If conditions are met right now, collapse immediately
-      if (!heroVisible && !isAnyPanelOpen) {
-        console.log("No hero, no panels. Collapsing immediately.");
-        setIsHovering(false);
-      } else {
-        requestAnimationFrame(() => attemptCollapse());
-      }
+      setTimeout(() => {
+        if (
+          !heroVisible &&
+          !isEmailDropdownOpen &&
+          !sidebarRef.current?.matches(":hover")
+        ) {
+          setIsHovering(false);
+        }
+      }, 50);
     }
   };
 
   const showToggleButton = !heroVisible && !isSidebarExpanded;
-
-  console.log("Rendering Sidebar:", {
-    heroVisible,
-    isHovering,
-    isAnyPanelOpen,
-    isSidebarExpanded
-  });
 
   return (
     <>
@@ -298,7 +333,7 @@ const SocialSidebar: FC = () => {
         initial={false}
         animate={{
           x: showToggleButton ? 0 : -50,
-          opacity: showToggleButton ? 1 : 0
+          opacity: showToggleButton ? 1 : 0,
         }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         onClick={() => {
@@ -321,12 +356,12 @@ const SocialSidebar: FC = () => {
         onMouseLeave={handleMouseLeave}
         animate={{
           x: isSidebarExpanded ? 0 : -80,
-          opacity: isSidebarExpanded ? 1 : 0.7
+          opacity: isSidebarExpanded ? 1 : 0.7,
         }}
         transition={{
           type: "spring",
           stiffness: 300,
-          damping: 30
+          damping: 30,
         }}
       >
         <div className="flex flex-col space-y-4">
@@ -337,8 +372,8 @@ const SocialSidebar: FC = () => {
             rel="noopener noreferrer"
             className="p-2 rounded-md text-white hover:bg-purple-600 transition-all duration-200 group"
           >
-            <GithubIcon 
-              size={24} 
+            <GithubIcon
+              size={24}
               className="group-hover:rotate-12 transition-transform"
             />
           </a>
@@ -349,49 +384,55 @@ const SocialSidebar: FC = () => {
             rel="noopener noreferrer"
             className="p-2 rounded-md text-white hover:bg-purple-600 transition-all duration-200 group"
           >
-            <LinkedinIcon 
-              size={24} 
+            <LinkedinIcon
+              size={24}
               className="group-hover:rotate-12 transition-transform"
             />
           </a>
 
-          <DropdownMenu onOpenChange={handleEmailDropdownChange}>
-            <DropdownMenuTrigger asChild>
-              <button 
+          <Popover onOpenChange={handleEmailDropdownChange}>
+            <PopoverTrigger asChild>
+              <button
                 className="p-2 rounded-md text-white hover:bg-purple-600 transition-all duration-200 group"
                 onMouseDown={preventDefaultMouseDown}
               >
-                <Mail 
-                  size={24} 
+                <Mail
+                  size={24}
                   className="group-hover:rotate-12 transition-transform"
                 />
               </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent 
-              className="w-52 bg-[#0B0B0B] border-purple-600" 
+            </PopoverTrigger>
+            <PopoverContent
+              className="w-52 bg-[#0B0B0B] border-purple-600 p-2"
               side="right"
               onCloseAutoFocus={(e) => e.preventDefault()}
             >
-              <DropdownMenuItem
-                onClick={() => window.open(`mailto:${email}`)}
-                className="text-white hover:bg-purple-600 hover:text-white focus:bg-purple-600 focus:text-white cursor-pointer"
-              >
-                Open in Email Client
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email}`)}
-                className="text-white hover:bg-purple-600 hover:text-white focus:bg-purple-600 focus:text-white cursor-pointer"
-              >
-                Open in Gmail
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={handleCopyEmail}
-                className="text-white hover:bg-purple-600 hover:text-white focus:bg-purple-600 focus:text-white cursor-pointer"
-              >
-                Copy Email Address
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              <div className="flex flex-col space-y-2">
+                <button
+                  onClick={() => window.open(`mailto:${email}`)}
+                  className="w-full text-left px-2 py-1.5 text-white hover:bg-purple-600 hover:text-white rounded-sm cursor-pointer"
+                >
+                  Open in Email Client
+                </button>
+                <button
+                  onClick={() =>
+                    window.open(
+                      `https://mail.google.com/mail/?view=cm&fs=1&to=${email}`
+                    )
+                  }
+                  className="w-full text-left px-2 py-1.5 text-white hover:bg-purple-600 hover:text-white rounded-sm cursor-pointer"
+                >
+                  Open in Gmail
+                </button>
+                <button
+                  onClick={handleCopyEmail}
+                  className="w-full text-left px-2 py-1.5 text-white hover:bg-purple-600 hover:text-white rounded-sm cursor-pointer"
+                >
+                  Copy Email Address
+                </button>
+              </div>
+            </PopoverContent>
+          </Popover>
 
           <button
             onClick={() => setShowSecret(true)}
@@ -399,32 +440,34 @@ const SocialSidebar: FC = () => {
             aria-label="Open secret terminal"
             onMouseDown={preventDefaultMouseDown}
           >
-            <Terminal 
-              size={24} 
+            <Terminal
+              size={24}
               className="group-hover:rotate-12 transition-transform"
             />
           </button>
 
           <Popover onOpenChange={handleAccessibilityChange}>
             <PopoverTrigger asChild>
-              <button 
+              <button
                 className="p-2 rounded-md text-white hover:bg-purple-600 transition-all duration-200 cursor-pointer group"
                 aria-label="Accessibility options"
                 onMouseDown={preventDefaultMouseDown}
               >
-                <Glasses 
-                  size={24} 
+                <Glasses
+                  size={24}
                   className="group-hover:rotate-12 transition-transform"
                 />
               </button>
             </PopoverTrigger>
-            <PopoverContent 
-              className="w-72 bg-[#0B0B0B] border-purple-600 p-4" 
+            <PopoverContent
+              className="w-72 bg-[#0B0B0B] border-purple-600 p-4"
               side="right"
               onCloseAutoFocus={(e) => e.preventDefault()}
             >
               <div className="space-y-4">
-                <h3 className="font-medium text-white">Accessibility Options</h3>
+                <h3 className="font-medium text-white">
+                  Accessibility Options
+                </h3>
                 <div>
                   <p className="text-sm text-gray-400 mb-2">Text Size</p>
                   <div className="flex gap-2">
@@ -460,7 +503,7 @@ const SocialSidebar: FC = () => {
                     className="w-full px-4 py-2 bg-purple-600 text-white rounded-md hover:opacity-90 transition-opacity"
                     onMouseDown={preventDefaultMouseDown}
                   >
-                    {dyslexicFont ? 'Disable' : 'Enable'} Dyslexic Font
+                    {dyslexicFont ? "Disable" : "Enable"} Dyslexic Font
                   </button>
                 </div>
               </div>
@@ -474,7 +517,8 @@ const SocialSidebar: FC = () => {
           <DialogHeader>
             <DialogTitle className="text-purple-600">Terminal</DialogTitle>
             <DialogDescription className="text-gray-400">
-              Type &apos;help&apos; for available commands. Press ESC or the close button to exit.
+              Type &apos;help&apos; for available commands. Press ESC or the
+              close button to exit.
             </DialogDescription>
             <button
               onClick={() => setShowSecret(false)}
@@ -488,9 +532,14 @@ const SocialSidebar: FC = () => {
 
           <div className="font-mono space-y-4 max-h-[60vh] overflow-y-auto terminal-scroll">
             <p className="text-purple-600">Welcome to the terminal!</p>
-            
+
             {history.map((entry, index) => (
-              <div key={index} className={entry.type === 'input' ? 'text-purple-600' : 'text-white ml-4'}>
+              <div
+                key={index}
+                className={
+                  entry.type === "input" ? "text-purple-600" : "text-white ml-4"
+                }
+              >
                 {entry.content}
               </div>
             ))}
@@ -505,9 +554,9 @@ const SocialSidebar: FC = () => {
                   setTabIndex(-1);
                 }}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && input.trim()) {
+                  if (e.key === "Enter" && input.trim()) {
                     handleCommand(input.trim());
-                  } else if (e.key === 'Tab') {
+                  } else if (e.key === "Tab") {
                     e.preventDefault();
                     handleTabCompletion(input.trim());
                   }
@@ -522,6 +571,6 @@ const SocialSidebar: FC = () => {
       </Dialog>
     </>
   );
-}
+};
 
 export default SocialSidebar;
