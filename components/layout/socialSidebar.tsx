@@ -2,7 +2,7 @@
 
 import type { FC } from 'react';
 import { GithubIcon, LinkedinIcon, Mail, Terminal, Glasses, X, ChevronRight } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import {
@@ -65,13 +65,46 @@ const SocialSidebar: FC = () => {
 
   const email = "dryfoosa@gmail.com";
 
+  const attemptCollapse = useCallback(() => {
+    console.log("attemptCollapse called. Conditions:", {
+      heroVisible,
+      isHovering,
+      isAnyPanelOpen
+    });
+  
+    if (!heroVisible && !isAnyPanelOpen) {
+      if (hoverOutTimeout.current) {
+        clearTimeout(hoverOutTimeout.current);
+        hoverOutTimeout.current = null;
+      }
+  
+      if (isHovering) {
+        console.log("No hero, no panel, but was hovering. Starting grace period...");
+        hoverOutTimeout.current = setTimeout(() => {
+          console.log("Grace period ended. Setting isHovering(false).");
+          setIsHovering(false);
+          hoverOutTimeout.current = null;
+        }, GRACE_PERIOD);
+      } else {
+        console.log("No hero, no panel, not hovering. Collapsing immediately.");
+        setIsHovering(false);
+      }
+    } else {
+      console.log("Conditions for collapse not met. Doing nothing.");
+      if (hoverOutTimeout.current) {
+        clearTimeout(hoverOutTimeout.current);
+        hoverOutTimeout.current = null;
+      }
+    }
+  }, [heroVisible, isHovering, isAnyPanelOpen]);
+  
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         const wasVisible = heroVisible;
         const nowVisible = entry.isIntersecting;
         setHeroVisible(nowVisible);
-
+  
         if (wasVisible && !nowVisible) {
           console.log("Hero became invisible. Attempting collapse after reflow...");
           requestAnimationFrame(() => attemptCollapse());
@@ -79,16 +112,18 @@ const SocialSidebar: FC = () => {
       },
       { threshold: 0.1 }
     );
-
+  
     const heroSection = document.getElementById('hero');
     if (heroSection) {
       observer.observe(heroSection);
     }
-
+  
     return () => {
       if (heroSection) observer.unobserve(heroSection);
     };
-  }, [heroVisible]);
+  }, [heroVisible, attemptCollapse]);
+  
+  
 
   useEffect(() => {
     const html = document.documentElement;
@@ -113,7 +148,7 @@ const SocialSidebar: FC = () => {
     if (command) {
       newHistory.push({ type: 'output', content: command.response });
     } else {
-      newHistory.push({ type: 'output', content: `Command not found: ${cmd}. Type 'help' for available commands.` });
+      newHistory.push({ type: 'output', content: `Command not found: ${cmd}. Type &apos;help&apos; for available commands.` });
     }
 
     setHistory(newHistory);
@@ -157,39 +192,6 @@ const SocialSidebar: FC = () => {
   };
 
   const isSidebarExpanded = heroVisible || isHovering || isAnyPanelOpen;
-
-  const attemptCollapse = () => {
-    console.log("attemptCollapse called. Conditions:", {
-      heroVisible,
-      isHovering,
-      isAnyPanelOpen
-    });
-
-    if (!heroVisible && !isAnyPanelOpen) {
-      if (hoverOutTimeout.current) {
-        clearTimeout(hoverOutTimeout.current);
-        hoverOutTimeout.current = null;
-      }
-
-      if (isHovering) {
-        console.log("No hero, no panel, but was hovering. Starting grace period...");
-        hoverOutTimeout.current = setTimeout(() => {
-          console.log("Grace period ended. Setting isHovering(false).");
-          setIsHovering(false);
-          hoverOutTimeout.current = null;
-        }, GRACE_PERIOD);
-      } else {
-        console.log("No hero, no panel, not hovering. Collapsing immediately.");
-        setIsHovering(false);
-      }
-    } else {
-      console.log("Conditions for collapse not met. Doing nothing.");
-      if (hoverOutTimeout.current) {
-        clearTimeout(hoverOutTimeout.current);
-        hoverOutTimeout.current = null;
-      }
-    }
-  };
 
   const handleMouseEnter = () => {
     if (hoverOutTimeout.current) {
@@ -472,7 +474,7 @@ const SocialSidebar: FC = () => {
           <DialogHeader>
             <DialogTitle className="text-purple-600">Terminal</DialogTitle>
             <DialogDescription className="text-gray-400">
-              Type 'help' for available commands. Press ESC or the close button to exit.
+              Type &apos;help&apos; for available commands. Press ESC or the close button to exit.
             </DialogDescription>
             <button
               onClick={() => setShowSecret(false)}
