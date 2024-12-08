@@ -111,7 +111,7 @@ export default function RootLayout({
           <Analytics />
           <SpeedInsights />
         </Suspense>
-       
+        
         <Toaster
           position="top-center"
           toastOptions={{
@@ -122,10 +122,10 @@ export default function RootLayout({
             duration: 4000,
           }}
         />
-       
+        
         <SocialSidebar />
         <Navbar />
-        <main>{children}</main>
+        <main className="relative">{children}</main>
         <Footer />
       </body>
     </html>

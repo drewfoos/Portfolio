@@ -1,7 +1,7 @@
 // components/Projects.tsx
 'use client';
 
-import React, { useRef, useState, useLayoutEffect } from 'react';
+import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import {
@@ -46,29 +46,43 @@ export default function Projects({ projects }: ProjectsProps) {
   }, []);
 
   const calculateMaxHeight = () => {
-    if (scrollContainerRef.current) {
-      const cardElements = scrollContainerRef.current.querySelectorAll('.project-card');
-      const heights = Array.from(cardElements).map((card) =>
-        (card as HTMLElement).getBoundingClientRect().height
-      );
-      if (heights.length > 0) {
-        const tallest = Math.max(...heights);
-        setMaxCardHeight(tallest);
-      }
+    if (!scrollContainerRef.current) return;
+    const cardElements = scrollContainerRef.current.querySelectorAll('.project-card');
+    const heights = Array.from(cardElements).map((card) =>
+      (card as HTMLElement).getBoundingClientRect().height
+    );
+
+    if (heights.length > 0) {
+      const tallest = Math.max(...heights);
+      setMaxCardHeight(tallest);
     }
   };
 
   useLayoutEffect(() => {
+    // Initial calculation once projects are loaded
     calculateMaxHeight();
-    const handleResize = () => {
-      calculateMaxHeight();
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
   }, [projects]);
+
+  useEffect(() => {
+    if (!scrollContainerRef.current) return;
+
+    // Create a ResizeObserver to watch for layout changes inside the container
+    const observer = new ResizeObserver(() => {
+      // Step 1: Remove the fixed height to let elements resize naturally
+      setMaxCardHeight(null);
+
+      // Step 2: Wait one animation frame so the browser applies layout changes
+      requestAnimationFrame(() => {
+        calculateMaxHeight();
+      });
+    });
+
+    observer.observe(scrollContainerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   const scroll = (direction: 'left' | 'right') => {
     if (!scrollContainerRef.current) return;

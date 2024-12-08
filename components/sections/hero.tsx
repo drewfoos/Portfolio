@@ -17,7 +17,7 @@ export const Hero: FC = () => {
   const headlineWords = ['Discover,', 'Design,', 'Develop,', 'Stand out.'];
   
   return (
-    <section className={`
+    <section id="hero" className={`
       ${axiforma.variable} 
       min-h-screen 
       bg-[#0B0B0B] 

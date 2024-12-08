@@ -1,14 +1,16 @@
 'use client'
 
 import type { FC } from 'react';
-import { GithubIcon, LinkedinIcon, Mail, Terminal, Glasses, X } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { GithubIcon, LinkedinIcon, Mail, Terminal, Glasses, X, ChevronRight } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogHeader,
+  DialogDescription
 } from "@/components/ui/dialog";
 import {
   Popover,
@@ -32,8 +34,6 @@ type HistoryEntry = {
   content: string;
 }
 
-// Re-added 'clear' into COMMANDS so it can be included in tab completion.
-// We'll still handle it as a special case in handleCommand.
 const COMMANDS: Command[] = [
   { command: 'help', response: 'Available commands: help, whoami, about, skills, contact, clear' },
   { command: 'whoami', response: 'andrew.dryfoos' },
@@ -43,6 +43,8 @@ const COMMANDS: Command[] = [
   { command: 'clear', response: '' },
 ];
 
+const GRACE_PERIOD = 500; // ms
+
 const SocialSidebar: FC = () => {
   const [showSecret, setShowSecret] = useState(false);
   const [input, setInput] = useState('');
@@ -51,10 +53,44 @@ const SocialSidebar: FC = () => {
   const [tabIndex, setTabIndex] = useState(-1);
   const [fontScale, setFontScale] = useState(0);
 
+  const [heroVisible, setHeroVisible] = useState(true);
+  const [isHovering, setIsHovering] = useState(false);
+
+  const [isEmailDropdownOpen, setIsEmailDropdownOpen] = useState(false);
+  const [isAccessibilityOpen, setIsAccessibilityOpen] = useState(false);
+  const isAnyPanelOpen = isEmailDropdownOpen || isAccessibilityOpen;
+
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const hoverOutTimeout = useRef<NodeJS.Timeout | null>(null);
+
   const email = "dryfoosa@gmail.com";
 
   useEffect(() => {
-    // Update documentElement classes based on font scale
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const wasVisible = heroVisible;
+        const nowVisible = entry.isIntersecting;
+        setHeroVisible(nowVisible);
+
+        if (wasVisible && !nowVisible) {
+          console.log("Hero became invisible. Attempting collapse after reflow...");
+          requestAnimationFrame(() => attemptCollapse());
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const heroSection = document.getElementById('hero');
+    if (heroSection) {
+      observer.observe(heroSection);
+    }
+
+    return () => {
+      if (heroSection) observer.unobserve(heroSection);
+    };
+  }, [heroVisible]);
+
+  useEffect(() => {
     const html = document.documentElement;
     html.classList.remove('font-size-scale-0', 'font-size-scale-1', 'font-size-scale-2');
     html.classList.add(`font-size-scale-${fontScale}`);
@@ -67,7 +103,6 @@ const SocialSidebar: FC = () => {
   const handleCommand = (cmd: string) => {
     const newHistory: HistoryEntry[] = [...history, { type: 'input', content: `$ ${cmd}` }];
 
-    // Handle 'clear' separately
     if (cmd.toLowerCase() === 'clear') {
       setHistory([]);
       setInput('');
@@ -99,15 +134,11 @@ const SocialSidebar: FC = () => {
   };
 
   const increaseTextSize = () => {
-    if (fontScale < 2) {
-      setFontScale(fontScale + 1);
-    }
+    if (fontScale < 2) setFontScale(fontScale + 1);
   };
 
   const decreaseTextSize = () => {
-    if (fontScale > 0) {
-      setFontScale(fontScale - 1);
-    }
+    if (fontScale > 0) setFontScale(fontScale - 1);
   };
 
   const toggleDyslexicFont = () => {
@@ -121,13 +152,97 @@ const SocialSidebar: FC = () => {
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(email)
-      .then(() => {
-        toast.success("Email address copied to clipboard!");
-      })
-      .catch(() => {
-        toast.error("Failed to copy email address. Please try again.");
-      });
+      .then(() => toast.success("Email address copied to clipboard!"))
+      .catch(() => toast.error("Failed to copy email address. Please try again."));
   };
+
+  const isSidebarExpanded = heroVisible || isHovering || isAnyPanelOpen;
+
+  const attemptCollapse = () => {
+    console.log("attemptCollapse called. Conditions:", {
+      heroVisible,
+      isHovering,
+      isAnyPanelOpen
+    });
+
+    if (!heroVisible && !isAnyPanelOpen) {
+      if (hoverOutTimeout.current) {
+        clearTimeout(hoverOutTimeout.current);
+        hoverOutTimeout.current = null;
+      }
+
+      if (isHovering) {
+        console.log("No hero, no panel, but was hovering. Starting grace period...");
+        hoverOutTimeout.current = setTimeout(() => {
+          console.log("Grace period ended. Setting isHovering(false).");
+          setIsHovering(false);
+          hoverOutTimeout.current = null;
+        }, GRACE_PERIOD);
+      } else {
+        console.log("No hero, no panel, not hovering. Collapsing immediately.");
+        setIsHovering(false);
+      }
+    } else {
+      console.log("Conditions for collapse not met. Doing nothing.");
+      if (hoverOutTimeout.current) {
+        clearTimeout(hoverOutTimeout.current);
+        hoverOutTimeout.current = null;
+      }
+    }
+  };
+
+  const handleMouseEnter = () => {
+    if (hoverOutTimeout.current) {
+      clearTimeout(hoverOutTimeout.current);
+      hoverOutTimeout.current = null;
+    }
+    console.log("Mouse entered sidebar. isHovering=true");
+    setIsHovering(true);
+  };
+
+  const handleMouseLeave = () => {
+    console.log("Mouse left sidebar. Attempting collapse after reflow...");
+    requestAnimationFrame(() => attemptCollapse());
+  };
+
+  const handleEmailDropdownChange = (open: boolean) => {
+    console.log("Email dropdown changed:", open);
+    setIsEmailDropdownOpen(open);
+    if (!open) {
+      console.log("Email dropdown closed. Attempting collapse after reflow...");
+      // If conditions are met right now, collapse immediately
+      if (!heroVisible && !isAnyPanelOpen) {
+        console.log("No hero, no panels. Collapsing immediately.");
+        setIsHovering(false);
+      } else {
+        requestAnimationFrame(() => attemptCollapse());
+      }
+    }
+  };
+
+  const handleAccessibilityChange = (open: boolean) => {
+    console.log("Accessibility popup changed:", open);
+    setIsAccessibilityOpen(open);
+    if (!open) {
+      console.log("Accessibility popup closed. Attempting collapse after reflow...");
+      // If conditions are met right now, collapse immediately
+      if (!heroVisible && !isAnyPanelOpen) {
+        console.log("No hero, no panels. Collapsing immediately.");
+        setIsHovering(false);
+      } else {
+        requestAnimationFrame(() => attemptCollapse());
+      }
+    }
+  };
+
+  const showToggleButton = !heroVisible && !isSidebarExpanded;
+
+  console.log("Rendering Sidebar:", {
+    heroVisible,
+    isHovering,
+    isAnyPanelOpen,
+    isSidebarExpanded
+  });
 
   return (
     <>
@@ -135,18 +250,18 @@ const SocialSidebar: FC = () => {
         .terminal-scroll::-webkit-scrollbar {
           width: 8px;
         }
-        
+
         .terminal-scroll::-webkit-scrollbar-track {
           background: #0B0B0B;
           border-radius: 4px;
         }
-        
+
         .terminal-scroll::-webkit-scrollbar-thumb {
           background: #9333ea;
           border-radius: 4px;
           transition: background-color 0.2s;
         }
-        
+
         .terminal-scroll::-webkit-scrollbar-thumb:hover {
           background: #a855f7;
         }
@@ -175,8 +290,45 @@ const SocialSidebar: FC = () => {
         }
       `}</style>
 
-      <aside className="fixed left-4 top-1/4 z-50 hidden lg:block">
+      {/* Toggle button to show/hide sidebar when hero not visible */}
+      <motion.button
+        className="fixed left-0 top-1/4 z-50 p-2 bg-purple-600 text-white rounded-r-md hidden lg:flex items-center justify-center"
+        initial={false}
+        animate={{
+          x: showToggleButton ? 0 : -50,
+          opacity: showToggleButton ? 1 : 0
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        onClick={() => {
+          if (hoverOutTimeout.current) {
+            clearTimeout(hoverOutTimeout.current);
+            hoverOutTimeout.current = null;
+          }
+          console.log("Toggle button clicked. Setting isHovering(true)");
+          setIsHovering(true);
+        }}
+        aria-label="Expand sidebar"
+      >
+        <ChevronRight size={20} />
+      </motion.button>
+
+      <motion.aside
+        ref={sidebarRef}
+        className="fixed left-4 top-1/4 z-50 hidden lg:block"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        animate={{
+          x: isSidebarExpanded ? 0 : -80,
+          opacity: isSidebarExpanded ? 1 : 0.7
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 30
+        }}
+      >
         <div className="flex flex-col space-y-4">
+          {/* Just hover BG, no scaling */}
           <a
             href="https://github.com/drewfoos"
             target="_blank"
@@ -188,6 +340,7 @@ const SocialSidebar: FC = () => {
               className="group-hover:rotate-12 transition-transform"
             />
           </a>
+
           <a
             href="https://www.linkedin.com/in/andrew-dryfoos/"
             target="_blank"
@@ -199,7 +352,8 @@ const SocialSidebar: FC = () => {
               className="group-hover:rotate-12 transition-transform"
             />
           </a>
-          <DropdownMenu>
+
+          <DropdownMenu onOpenChange={handleEmailDropdownChange}>
             <DropdownMenuTrigger asChild>
               <button 
                 className="p-2 rounded-md text-white hover:bg-purple-600 transition-all duration-200 group"
@@ -214,9 +368,7 @@ const SocialSidebar: FC = () => {
             <DropdownMenuContent 
               className="w-52 bg-[#0B0B0B] border-purple-600" 
               side="right"
-              onCloseAutoFocus={(e) => {
-                e.preventDefault();
-              }}
+              onCloseAutoFocus={(e) => e.preventDefault()}
             >
               <DropdownMenuItem
                 onClick={() => window.open(`mailto:${email}`)}
@@ -238,6 +390,7 @@ const SocialSidebar: FC = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
           <button
             onClick={() => setShowSecret(true)}
             className="p-2 rounded-md text-white hover:bg-purple-600 transition-all duration-200 cursor-pointer group"
@@ -249,7 +402,8 @@ const SocialSidebar: FC = () => {
               className="group-hover:rotate-12 transition-transform"
             />
           </button>
-          <Popover>
+
+          <Popover onOpenChange={handleAccessibilityChange}>
             <PopoverTrigger asChild>
               <button 
                 className="p-2 rounded-md text-white hover:bg-purple-600 transition-all duration-200 cursor-pointer group"
@@ -265,9 +419,7 @@ const SocialSidebar: FC = () => {
             <PopoverContent 
               className="w-72 bg-[#0B0B0B] border-purple-600 p-4" 
               side="right"
-              onCloseAutoFocus={(e) => {
-                e.preventDefault();
-              }}
+              onCloseAutoFocus={(e) => e.preventDefault()}
             >
               <div className="space-y-4">
                 <h3 className="font-medium text-white">Accessibility Options</h3>
@@ -313,26 +465,27 @@ const SocialSidebar: FC = () => {
             </PopoverContent>
           </Popover>
         </div>
-      </aside>
+      </motion.aside>
 
       <Dialog open={showSecret} onOpenChange={setShowSecret}>
         <DialogContent className="bg-[#0B0B0B] border-purple-600 max-w-2xl">
           <DialogHeader>
-            <div className="flex justify-between items-center">
-              <DialogTitle className="text-purple-600">Terminal</DialogTitle>
-              <button
-                onClick={() => setShowSecret(false)}
-                className="text-gray-400 hover:text-white transition-colors"
-                aria-label="Close terminal"
-                onMouseDown={preventDefaultMouseDown}
-              >
-                <X size={20} />
-              </button>
-            </div>
+            <DialogTitle className="text-purple-600">Terminal</DialogTitle>
+            <DialogDescription className="text-gray-400">
+              Type 'help' for available commands. Press ESC or the close button to exit.
+            </DialogDescription>
+            <button
+              onClick={() => setShowSecret(false)}
+              className="text-gray-400 hover:text-white transition-colors absolute top-4 right-4"
+              aria-label="Close terminal"
+              onMouseDown={preventDefaultMouseDown}
+            >
+              <X size={20} />
+            </button>
           </DialogHeader>
-          
+
           <div className="font-mono space-y-4 max-h-[60vh] overflow-y-auto terminal-scroll">
-            <p className="text-purple-600">Welcome to the terminal! Type &apos;help&apos; for available commands.</p>
+            <p className="text-purple-600">Welcome to the terminal!</p>
             
             {history.map((entry, index) => (
               <div key={index} className={entry.type === 'input' ? 'text-purple-600' : 'text-white ml-4'}>
@@ -359,6 +512,7 @@ const SocialSidebar: FC = () => {
                 }}
                 className="flex-1 bg-transparent border-none outline-none text-white ml-2 focus:ring-0"
                 autoFocus
+                aria-label="Terminal input"
               />
             </div>
           </div>

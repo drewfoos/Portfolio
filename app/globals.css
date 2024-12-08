@@ -3,6 +3,19 @@
 @tailwind utilities;
 
 
+@layer utilities {
+  .backdrop-blur-sidebar {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  
+  .transition-all-sidebar {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
