@@ -2,7 +2,8 @@
 
 import type { FC } from 'react';
 import { GithubIcon, LinkedinIcon, Mail, Terminal, Glasses, X } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import {
   Dialog,
   DialogContent,
@@ -31,13 +32,15 @@ type HistoryEntry = {
   content: string;
 }
 
+// Re-added 'clear' into COMMANDS so it can be included in tab completion.
+// We'll still handle it as a special case in handleCommand.
 const COMMANDS: Command[] = [
   { command: 'help', response: 'Available commands: help, whoami, about, skills, contact, clear' },
   { command: 'whoami', response: 'andrew.dryfoos' },
   { command: 'about', response: 'Full-stack developer passionate about creating meaningful user experiences.' },
   { command: 'skills', response: 'JavaScript, TypeScript, React, Next.js, and a love for League of Legends!' },
   { command: 'contact', response: 'Email: dryfoosa@gmail.com\nGitHub: github.com/drewfoos' },
-  { command: 'clear', response: '' }
+  { command: 'clear', response: '' },
 ];
 
 const SocialSidebar: FC = () => {
@@ -46,12 +49,26 @@ const SocialSidebar: FC = () => {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [dyslexicFont, setDyslexicFont] = useState(false);
   const [tabIndex, setTabIndex] = useState(-1);
+  const [fontScale, setFontScale] = useState(0);
+
   const email = "dryfoosa@gmail.com";
+
+  useEffect(() => {
+    // Update documentElement classes based on font scale
+    const html = document.documentElement;
+    html.classList.remove('font-size-scale-0', 'font-size-scale-1', 'font-size-scale-2');
+    html.classList.add(`font-size-scale-${fontScale}`);
+  }, [fontScale]);
+
+  const preventDefaultMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+  };
 
   const handleCommand = (cmd: string) => {
     const newHistory: HistoryEntry[] = [...history, { type: 'input', content: `$ ${cmd}` }];
-    
-    if (cmd === 'clear') {
+
+    // Handle 'clear' separately
+    if (cmd.toLowerCase() === 'clear') {
       setHistory([]);
       setInput('');
       return;
@@ -61,9 +78,9 @@ const SocialSidebar: FC = () => {
     if (command) {
       newHistory.push({ type: 'output', content: command.response });
     } else {
-      newHistory.push({ type: 'output', content: `Command not found: ${cmd}. Type &apos;help&apos; for available commands.` });
+      newHistory.push({ type: 'output', content: `Command not found: ${cmd}. Type 'help' for available commands.` });
     }
-    
+
     setHistory(newHistory);
     setInput('');
     setTabIndex(-1);
@@ -75,41 +92,41 @@ const SocialSidebar: FC = () => {
       .filter(cmd => cmd.startsWith(currentInput.toLowerCase()));
 
     if (matchingCommands.length > 0) {
-      if (tabIndex === -1 || tabIndex >= matchingCommands.length) {
-        setTabIndex(0);
-        setInput(matchingCommands[0]);
-      } else {
-        setTabIndex(tabIndex + 1);
-        setInput(matchingCommands[tabIndex] || matchingCommands[0]);
-      }
+      const newTabIndex = (tabIndex + 1) % matchingCommands.length;
+      setTabIndex(newTabIndex);
+      setInput(matchingCommands[newTabIndex]);
     }
   };
 
   const increaseTextSize = () => {
-    const html = document.documentElement;
-    const currentSize = parseFloat(getComputedStyle(html).fontSize);
-    html.style.fontSize = `${currentSize + 2}px`;
+    if (fontScale < 2) {
+      setFontScale(fontScale + 1);
+    }
   };
 
   const decreaseTextSize = () => {
-    const html = document.documentElement;
-    const currentSize = parseFloat(getComputedStyle(html).fontSize);
-    if (currentSize > 12) {
-      html.style.fontSize = `${currentSize - 2}px`;
+    if (fontScale > 0) {
+      setFontScale(fontScale - 1);
     }
   };
 
   const toggleDyslexicFont = () => {
     setDyslexicFont(!dyslexicFont);
-    if (!dyslexicFont) {
-      document.body.style.fontFamily = 'var(--font-dyslexic)';
-    } else {
-      document.body.style.fontFamily = '';
-    }
+    document.documentElement.classList.toggle('dyslexic-font');
   };
 
   const toggleHighContrast = () => {
     document.documentElement.classList.toggle('high-contrast');
+  };
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(email)
+      .then(() => {
+        toast.success("Email address copied to clipboard!");
+      })
+      .catch(() => {
+        toast.error("Failed to copy email address. Please try again.");
+      });
   };
 
   return (
@@ -134,10 +151,27 @@ const SocialSidebar: FC = () => {
           background: #a855f7;
         }
 
-        /* Firefox */
         .terminal-scroll {
           scrollbar-width: thin;
           scrollbar-color: #9333ea #0B0B0B;
+        }
+
+        .dyslexic-font {
+          font-family: var(--font-dyslexic) !important;
+        }
+
+        .font-size-scale-0 {
+          font-size: 16px !important;
+        }
+        .font-size-scale-1 {
+          font-size: 18px !important;
+        }
+        .font-size-scale-2 {
+          font-size: 20px !important;
+        }
+
+        .high-contrast {
+          filter: contrast(2);
         }
       `}</style>
 
@@ -167,7 +201,10 @@ const SocialSidebar: FC = () => {
           </a>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="p-2 rounded-md text-white hover:bg-purple-600 transition-all duration-200 group">
+              <button 
+                className="p-2 rounded-md text-white hover:bg-purple-600 transition-all duration-200 group"
+                onMouseDown={preventDefaultMouseDown}
+              >
                 <Mail 
                   size={24} 
                   className="group-hover:rotate-12 transition-transform"
@@ -177,6 +214,9 @@ const SocialSidebar: FC = () => {
             <DropdownMenuContent 
               className="w-52 bg-[#0B0B0B] border-purple-600" 
               side="right"
+              onCloseAutoFocus={(e) => {
+                e.preventDefault();
+              }}
             >
               <DropdownMenuItem
                 onClick={() => window.open(`mailto:${email}`)}
@@ -191,10 +231,7 @@ const SocialSidebar: FC = () => {
                 Open in Gmail
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => {
-                  navigator.clipboard.writeText(email);
-                  // You might want to add a toast notification here
-                }}
+                onClick={handleCopyEmail}
                 className="text-white hover:bg-purple-600 hover:text-white focus:bg-purple-600 focus:text-white cursor-pointer"
               >
                 Copy Email Address
@@ -205,6 +242,7 @@ const SocialSidebar: FC = () => {
             onClick={() => setShowSecret(true)}
             className="p-2 rounded-md text-white hover:bg-purple-600 transition-all duration-200 cursor-pointer group"
             aria-label="Open secret terminal"
+            onMouseDown={preventDefaultMouseDown}
           >
             <Terminal 
               size={24} 
@@ -216,6 +254,7 @@ const SocialSidebar: FC = () => {
               <button 
                 className="p-2 rounded-md text-white hover:bg-purple-600 transition-all duration-200 cursor-pointer group"
                 aria-label="Accessibility options"
+                onMouseDown={preventDefaultMouseDown}
               >
                 <Glasses 
                   size={24} 
@@ -226,6 +265,9 @@ const SocialSidebar: FC = () => {
             <PopoverContent 
               className="w-72 bg-[#0B0B0B] border-purple-600 p-4" 
               side="right"
+              onCloseAutoFocus={(e) => {
+                e.preventDefault();
+              }}
             >
               <div className="space-y-4">
                 <h3 className="font-medium text-white">Accessibility Options</h3>
@@ -236,6 +278,7 @@ const SocialSidebar: FC = () => {
                       onClick={decreaseTextSize}
                       className="px-4 py-2 bg-purple-600 text-white rounded-md hover:opacity-90 transition-opacity"
                       aria-label="Decrease text size"
+                      onMouseDown={preventDefaultMouseDown}
                     >
                       A-
                     </button>
@@ -243,6 +286,7 @@ const SocialSidebar: FC = () => {
                       onClick={increaseTextSize}
                       className="px-4 py-2 bg-purple-600 text-white rounded-md hover:opacity-90 transition-opacity"
                       aria-label="Increase text size"
+                      onMouseDown={preventDefaultMouseDown}
                     >
                       A+
                     </button>
@@ -253,12 +297,14 @@ const SocialSidebar: FC = () => {
                   <button
                     onClick={toggleHighContrast}
                     className="w-full px-4 py-2 bg-purple-600 text-white rounded-md hover:opacity-90 transition-opacity"
+                    onMouseDown={preventDefaultMouseDown}
                   >
                     Toggle High Contrast
                   </button>
                   <button
                     onClick={toggleDyslexicFont}
                     className="w-full px-4 py-2 bg-purple-600 text-white rounded-md hover:opacity-90 transition-opacity"
+                    onMouseDown={preventDefaultMouseDown}
                   >
                     {dyslexicFont ? 'Disable' : 'Enable'} Dyslexic Font
                   </button>
@@ -278,6 +324,7 @@ const SocialSidebar: FC = () => {
                 onClick={() => setShowSecret(false)}
                 className="text-gray-400 hover:text-white transition-colors"
                 aria-label="Close terminal"
+                onMouseDown={preventDefaultMouseDown}
               >
                 <X size={20} />
               </button>
@@ -285,7 +332,7 @@ const SocialSidebar: FC = () => {
           </DialogHeader>
           
           <div className="font-mono space-y-4 max-h-[60vh] overflow-y-auto terminal-scroll">
-            <p className="text-purple-600">Welcome to the terminal! Type &apos;help&apos; for available commands.</p>
+            <p className="text-purple-600">Welcome to the terminal! Type 'help' for available commands.</p>
             
             {history.map((entry, index) => (
               <div key={index} className={entry.type === 'input' ? 'text-purple-600' : 'text-white ml-4'}>
