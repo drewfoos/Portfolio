@@ -14,6 +14,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type Command = {
   command: string;
@@ -40,6 +46,7 @@ const SocialSidebar: FC = () => {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [dyslexicFont, setDyslexicFont] = useState(false);
   const [tabIndex, setTabIndex] = useState(-1);
+  const email = "dryfoosa@gmail.com";
 
   const handleCommand = (cmd: string) => {
     const newHistory: HistoryEntry[] = [...history, { type: 'input', content: `$ ${cmd}` }];
@@ -158,15 +165,42 @@ const SocialSidebar: FC = () => {
               className="group-hover:rotate-12 transition-transform"
             />
           </a>
-          <a
-            href="mailto:dryfoosa@gmail.com"
-            className="p-2 rounded-md text-white hover:bg-purple-600 transition-all duration-200 group"
-          >
-            <Mail 
-              size={24} 
-              className="group-hover:rotate-12 transition-transform"
-            />
-          </a>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="p-2 rounded-md text-white hover:bg-purple-600 transition-all duration-200 group">
+                <Mail 
+                  size={24} 
+                  className="group-hover:rotate-12 transition-transform"
+                />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent 
+              className="w-52 bg-[#0B0B0B] border-purple-600" 
+              side="right"
+            >
+              <DropdownMenuItem
+                onClick={() => window.open(`mailto:${email}`)}
+                className="text-white hover:bg-purple-600 hover:text-white focus:bg-purple-600 focus:text-white cursor-pointer"
+              >
+                Open in Email Client
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email}`)}
+                className="text-white hover:bg-purple-600 hover:text-white focus:bg-purple-600 focus:text-white cursor-pointer"
+              >
+                Open in Gmail
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  navigator.clipboard.writeText(email);
+                  // You might want to add a toast notification here
+                }}
+                className="text-white hover:bg-purple-600 hover:text-white focus:bg-purple-600 focus:text-white cursor-pointer"
+              >
+                Copy Email Address
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <button
             onClick={() => setShowSecret(true)}
             className="p-2 rounded-md text-white hover:bg-purple-600 transition-all duration-200 cursor-pointer group"
