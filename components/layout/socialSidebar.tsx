@@ -332,7 +332,7 @@ const SocialSidebar: FC = () => {
           </DialogHeader>
           
           <div className="font-mono space-y-4 max-h-[60vh] overflow-y-auto terminal-scroll">
-            <p className="text-purple-600">Welcome to the terminal! Type 'help' for available commands.</p>
+            <p className="text-purple-600">Welcome to the terminal! Type &apos;help&apos; for available commands.</p>
             
             {history.map((entry, index) => (
               <div key={index} className={entry.type === 'input' ? 'text-purple-600' : 'text-white ml-4'}>
