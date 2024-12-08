@@ -35,7 +35,7 @@ export const Footer = () => {
         {/* Contact Info */}
         <div className="flex flex-col sm:flex-row justify-center items-center gap-6 text-white">
           <a
-            href="mailto:dryfoos@gmail.com"
+            href="mailto:dryfoosa@gmail.com"
             className="flex items-center gap-3 hover:text-purple-400 transition-colors"
           >
             <MailIcon className="w-5 h-5" />
