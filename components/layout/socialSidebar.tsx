@@ -90,8 +90,7 @@ const SocialSidebar: FC = () => {
 
       if (isHovering) {
         hoverOutTimeout.current = setTimeout(() => {
-          // Only collapse if we're not hovering over the sidebar and no panels are open
-          if (!sidebarRef.current?.matches(":hover") && !isAnyPanelOpen) {
+          if (!isAnyPanelOpen) {
             setIsHovering(false);
           }
           hoverOutTimeout.current = null;
@@ -112,19 +111,18 @@ const SocialSidebar: FC = () => {
       ([entry]) => {
         const wasVisible = heroVisible;
         const nowVisible = entry.isIntersecting;
-
-        if (wasVisible && !nowVisible) {
-          setIsEmailDropdownOpen(false);
-          setIsAccessibilityOpen(false);
+        
+        // Only reset states if no panels are open
+        if (wasVisible && !nowVisible && !isAnyPanelOpen) {
           setIsHovering(false);
         }
-
+        
         setHeroVisible(nowVisible);
       },
       { threshold: 0.1 }
     );
 
-    const heroSection = document.getElementById("hero");
+    const heroSection = document.getElementById('hero');
     if (heroSection) {
       observer.observe(heroSection);
     }
@@ -132,33 +130,26 @@ const SocialSidebar: FC = () => {
     return () => {
       if (heroSection) observer.unobserve(heroSection);
     };
-  }, [heroVisible]);
+  }, [heroVisible, isAnyPanelOpen]);
 
   useEffect(() => {
     const html = document.documentElement;
-    html.classList.remove(
-      "font-size-scale-0",
-      "font-size-scale-1",
-      "font-size-scale-2"
-    );
+    html.classList.remove('font-size-scale-0', 'font-size-scale-1', 'font-size-scale-2');
     html.classList.add(`font-size-scale-${fontScale}`);
   }, [fontScale]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        sidebarRef.current &&
-        !sidebarRef.current.contains(event.target as Node)
-      ) {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
         if (!heroVisible && !isAnyPanelOpen) {
           setIsHovering(false);
         }
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [heroVisible, isAnyPanelOpen]);
 
@@ -167,36 +158,30 @@ const SocialSidebar: FC = () => {
   };
 
   const handleCommand = (cmd: string) => {
-    const newHistory: HistoryEntry[] = [
-      ...history,
-      { type: "input", content: `$ ${cmd}` },
-    ];
+    const newHistory: HistoryEntry[] = [...history, { type: 'input', content: `$ ${cmd}` }];
 
-    if (cmd.toLowerCase() === "clear") {
+    if (cmd.toLowerCase() === 'clear') {
       setHistory([]);
-      setInput("");
+      setInput('');
       return;
     }
 
-    const command = COMMANDS.find((c) => c.command === cmd.toLowerCase());
+    const command = COMMANDS.find(c => c.command === cmd.toLowerCase());
     if (command) {
-      newHistory.push({ type: "output", content: command.response });
+      newHistory.push({ type: 'output', content: command.response });
     } else {
-      newHistory.push({
-        type: "output",
-        content: `Command not found: ${cmd}. Type &apos;help&apos; for available commands.`,
-      });
+      newHistory.push({ type: 'output', content: `Command not found: ${cmd}. Type &apos;help&apos; for available commands.` });
     }
 
     setHistory(newHistory);
-    setInput("");
+    setInput('');
     setTabIndex(-1);
   };
 
   const handleTabCompletion = (currentInput: string) => {
-    const matchingCommands = COMMANDS.map((c) => c.command).filter((cmd) =>
-      cmd.startsWith(currentInput.toLowerCase())
-    );
+    const matchingCommands = COMMANDS
+      .map(c => c.command)
+      .filter(cmd => cmd.startsWith(currentInput.toLowerCase()));
 
     if (matchingCommands.length > 0) {
       const newTabIndex = (tabIndex + 1) % matchingCommands.length;
@@ -215,30 +200,30 @@ const SocialSidebar: FC = () => {
 
   const toggleDyslexicFont = () => {
     setDyslexicFont(!dyslexicFont);
-    document.documentElement.classList.toggle("dyslexic-font");
+    document.documentElement.classList.toggle('dyslexic-font');
   };
 
   const toggleHighContrast = () => {
-    document.documentElement.classList.toggle("high-contrast");
+    document.documentElement.classList.toggle('high-contrast');
   };
 
   const handleCopyEmail = () => {
-    navigator.clipboard
-      .writeText(email)
+    navigator.clipboard.writeText(email)
       .then(() => toast.success("Email address copied to clipboard!"))
-      .catch(() =>
-        toast.error("Failed to copy email address. Please try again.")
-      );
+      .catch(() => toast.error("Failed to copy email address. Please try again."));
   };
 
   const isSidebarExpanded = heroVisible || isHovering || isAnyPanelOpen;
 
   const handleMouseEnter = () => {
-    if (hoverOutTimeout.current) {
-      clearTimeout(hoverOutTimeout.current);
-      hoverOutTimeout.current = null;
+    // Only set hovering if no panels are open
+    if (!isAnyPanelOpen) {
+      if (hoverOutTimeout.current) {
+        clearTimeout(hoverOutTimeout.current);
+        hoverOutTimeout.current = null;
+      }
+      setIsHovering(true);
     }
-    setIsHovering(true);
   };
 
   const handleMouseLeave = () => {
@@ -249,35 +234,27 @@ const SocialSidebar: FC = () => {
 
   const handleEmailDropdownChange = (open: boolean) => {
     setIsEmailDropdownOpen(open);
-    // Don't collapse if we're hovering over the sidebar
     if (!open) {
-      setTimeout(() => {
-        if (
-          !heroVisible &&
-          !isAccessibilityOpen &&
-          !sidebarRef.current?.matches(":hover")
-        ) {
+      // Only attempt to collapse if both panels are closed AND we're not hovering
+      requestAnimationFrame(() => {
+        if (!heroVisible && !isAccessibilityOpen && !sidebarRef.current?.matches(":hover")) {
           setIsHovering(false);
         }
-      }, 50);
+      });
     }
-  };
+};
 
-  const handleAccessibilityChange = (open: boolean) => {
+const handleAccessibilityChange = (open: boolean) => {
     setIsAccessibilityOpen(open);
-    // Don't collapse if we're hovering over the sidebar
     if (!open) {
-      setTimeout(() => {
-        if (
-          !heroVisible &&
-          !isEmailDropdownOpen &&
-          !sidebarRef.current?.matches(":hover")
-        ) {
+      // Only attempt to collapse if both panels are closed AND we're not hovering
+      requestAnimationFrame(() => {
+        if (!heroVisible && !isEmailDropdownOpen && !sidebarRef.current?.matches(":hover")) {
           setIsHovering(false);
         }
-      }, 50);
+      });
     }
-  };
+};
 
   const showToggleButton = !heroVisible && !isSidebarExpanded;
 
