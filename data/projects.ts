@@ -58,5 +58,14 @@ export const projects: Project[] = [
     tags: ["Gaming", "Analytics", "HCI"],
     liveUrl: "https://www.youtube.com/watch?v=9upWENE6zN4"
   },
-  
+  {
+    id: 7,
+    title: "Lifelong Skills Training Inc",
+    description: "A family-centered organization that empowers youth with disabilities and their families through creative, developmental, life, and vocational skills programs. Lifelong fosters inclusion and advocacy for a brighter future.",
+    imageUrl: "/projects/llskills.png",
+    category: "Non-Profit",
+    tags: ["Inclusion", "Advocacy", "Education"],
+    liveUrl: "https://llskillstraining.org",
+    figmaUrl: "https://www.figma.com/design/gOx6RuAv9mQ7oRgCRuFdfS/Lifelong-Skill-Wireframes-V2?node-id=0-1&t=9qwyV9wEU0jvYez5-1"
+  }
 ] 

@@ -14,7 +14,7 @@ import { usePathname } from 'next/navigation'
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
-    const is404 = pathname !== '/' && pathname !== '/projects'; // Add other valid routes as needed
+    const is404 = pathname !== '/'; // Add other valid routes as needed
   
     const structuredData = {
       "@context": "https://schema.org",

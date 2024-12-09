@@ -78,7 +78,7 @@ export const About = () => {
             transition={{ duration: 0.8, delay: 0.9 }}
           >
             <a
-              href="https://drive.google.com/file/d/1IT00V56PgbhBglOof1YXX53c2-jNnULh/view?usp=sharing"
+              href="https://drive.google.com/file/d/14mY16nlAmcMaTkQI6vJo-p7CGu_hXLJ9/view?usp=sharing"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-3 text-white font-medium bg-white/10 px-8 py-4 rounded-full backdrop-blur-sm hover:bg-white/20 transition-all group"
