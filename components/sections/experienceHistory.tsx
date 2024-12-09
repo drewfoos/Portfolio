@@ -1,13 +1,25 @@
 'use client';
-
 import { axiforma } from '@/app/fonts';
 import { experiences } from '@/data/experience';
+import { type FC } from 'react';
+
+const GradientGlow: FC = () => (
+  <div
+    className="absolute -right-[150px] top-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full opacity-80"
+    aria-hidden="true"
+  >
+    <div className="w-full h-full bg-gradient-to-br from-[#1919A7] to-[#D017B8] blur-[150px] mix-blend-screen" />
+  </div>
+);
 
 export const ExperienceHistory = () => {
   return (
-    <section className={`${axiforma.variable} relative w-full bg-[#0B0B0B] py-12 md:py-16 lg:py-20 px-4 lg:px-0`}>
-      <div className="relative mx-auto max-w-4xl">
-        <h2 className="text-2xl md:text-3xl lg:text-[42px] font-light leading-normal lg:leading-[52px] font-poppins tracking-[-0.05em] text-[#FAFAFA] mb-8 md:mb-12">
+    <section className={`${axiforma.variable} relative w-full bg-[#0B0B0B] py-12 md:py-16 lg:py-20 px-4 lg:px-0 overflow-hidden`}>
+      {/* Right Corner Gradient */}
+      <GradientGlow />
+
+      <div className="relative mx-auto max-w-4xl z-10">
+        <h2 className="text-2xl md:text-3xl font-semibold text-white mb-8">
           Experience history
         </h2>
         <div className="flex flex-col gap-6 md:gap-8">
@@ -36,4 +48,5 @@ export const ExperienceHistory = () => {
     </section>
   );
 };
+
 export default ExperienceHistory;

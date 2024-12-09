@@ -15,8 +15,23 @@ export const metadata: Metadata = {
     description: 'Portfolio and personal website of Andrew Dryfoos',
     url: 'https://andrewdryfoos.dev',
     locale: 'en_US',
+    images: [
+      {
+        url: '/api/og',
+        width: 1200,
+        height: 630,
+        alt: 'Andrew Dryfoos Portfolio',
+      }
+    ],
   },
  
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Andrew Dryfoos | Software Engineer & Developer',
+    description: 'Portfolio and personal website of Andrew Dryfoos',
+    images: ['/api/og'],
+  },
+
   robots: {
     index: true,
     follow: true,
@@ -28,9 +43,11 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION_CODE || '',
   },
+  
   alternates: {
     canonical: 'https://andrewdryfoos.dev',
   },

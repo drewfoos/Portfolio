@@ -1,6 +1,7 @@
 'use client';
 import { axiforma } from '@/app/fonts';
 import { IconType } from 'react-icons';
+import { type FC } from 'react';
 import {
   SiReact,
   SiNextdotjs,
@@ -15,6 +16,15 @@ import {
   SiFigma,
   SiAmazon
 } from 'react-icons/si';
+
+const GradientGlow: FC = () => (
+  <div
+    className="absolute -left-[150px] top-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full opacity-80"
+    aria-hidden="true"
+  >
+    <div className="w-full h-full bg-gradient-to-br from-[#1919A7] to-[#D017B8] blur-[150px] mix-blend-screen" />
+  </div>
+);
 
 interface Skill {
   Icon: IconType;
@@ -98,37 +108,39 @@ const skills: Skill[] = [
   }
 ];
 
-export const Skills = () => {
-    return (
-      <section className={`${axiforma.variable} relative w-full bg-[#0B0B0B] py-12 md:py-16 lg:py-20 px-4 lg:px-0`}>
-        <div className="relative mx-auto max-w-4xl">
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-[42px] font-light leading-normal lg:leading-[52px] font-poppins tracking-[-0.05em] text-[#FAFAFA] mb-8 md:mb-12">
-            Technical skills
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
-            {skills.map((skill) => (
-              <div
-                key={skill.name}
-                className="group relative flex flex-col items-center"
-              >
-                <div className="relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 flex items-center justify-center bg-[#101010] rounded-lg sm:rounded-xl transition-all duration-300 group-hover:scale-95">
-                  <skill.Icon
-                    className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 transition-all duration-300"
-                    style={{ color: skill.color }}
-                  />
-                </div>
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-all duration-300 w-max z-10">
-                  <div className="bg-[#1A1A1A] px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg shadow-xl">
-                    <p className="text-white font-medium text-xs sm:text-sm whitespace-nowrap">{skill.name}</p>
-                    <p className="text-white/60 text-[10px] sm:text-xs whitespace-nowrap">{skill.description}</p>
-                  </div>
-                </div>
+export const Skills: FC = () => {
+  return (
+    <section className={`${axiforma.variable} relative w-full bg-[#0B0B0B] py-12 md:py-16 lg:py-20 px-4 lg:px-0 overflow-hidden`}>
+      {/* Left Corner Gradient */}
+      <GradientGlow />
+
+      <div className="relative mx-auto max-w-4xl z-10">
+        <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-light leading-[1.1] lg:leading-[80px] font-axiforma tracking-[-0.04em] bg-gradient-to-b from-[#FAFAFA] to-[rgba(250,250,250,0.71)] bg-clip-text text-transparent mb-12 md:mb-16">
+          Technical skills
+        </h2>
+       
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8 md:gap-12">
+          {skills.map((skill) => (
+            <div
+              key={skill.name}
+              className="group relative flex flex-col items-center"
+            >
+              <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center bg-[#101010] rounded-xl transition-all duration-300 group-hover:scale-95">
+                <skill.Icon
+                  className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 transition-all duration-300"
+                  style={{ color: skill.color }}
+                />
               </div>
-            ))}
-          </div>
+              <div className="mt-4 text-center">
+                <p className="text-white font-medium text-lg">{skill.name}</p>
+                <p className="text-white/60 text-sm mt-1">{skill.description}</p>
+              </div>
+            </div>
+          ))}
         </div>
-      </section>
-    );
-  };
+      </div>
+    </section>
+  );
+};
 
 export default Skills;
