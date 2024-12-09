@@ -44,10 +44,6 @@ export const metadata: Metadata = {
     },
   },
   
-  verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION_CODE || '',
-  },
-  
   alternates: {
     canonical: 'https://andrewdryfoos.dev',
   },

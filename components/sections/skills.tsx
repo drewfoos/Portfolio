@@ -14,7 +14,7 @@ import {
   SiPostgresql,
   SiGit,
   SiFigma,
-  SiAmazon
+  SiPrisma
 } from 'react-icons/si';
 
 const GradientGlow: FC = () => (
@@ -101,10 +101,10 @@ const skills: Skill[] = [
     color: "#F24E1E"
   },
   {
-    Icon: SiAmazon,
-    name: "AWS",
-    description: "Cloud services",
-    color: "#FF9900"
+    Icon: SiPrisma,
+    name: "Prisma",
+    description: "Modern database toolkit",
+    color: "#0C344B",
   }
 ];
 
