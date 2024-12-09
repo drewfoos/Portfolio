@@ -1,36 +1,156 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Andrew Dryfoos Portfolio
 
-## Getting Started
+A modern, accessible portfolio website built with Next.js 15, featuring interactive components and a focus on user experience.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### 🎯 Core Features
+- Responsive design optimized for all devices
+- Interactive navigation with smooth scrolling
+- Dark theme with modern aesthetics
+- SEO optimized with metadata configuration
+- Interactive sidebar with social links and accessibility options
+
+### 💡 Interactive Elements
+- Secret terminal with custom commands
+- Accessibility controls including:
+  - Font size adjustment
+  - High contrast mode
+  - Dyslexic font support
+- Email interaction options:
+  - Direct email client opening
+  - Gmail integration
+  - Quick copy to clipboard
+
+### 📱 Sections
+- Hero section
+- About Me
+- Projects showcase
+- Experience history
+- Technical skills grid
+- Contact information
+
+## 🛠 Tech Stack
+
+### Core Technologies
+- **Next.js 15.0.3** - React framework with App Router
+- **React 19 RC** - JavaScript library for user interfaces
+- **TypeScript** - Type-safe development
+- **Tailwind CSS 3.4** - Utility-first styling
+- **Framer Motion 10** - Smooth animations
+
+### 🧩 UI Components & Styling
+- **Radix UI** - Headless UI components
+  - Dialog
+  - Dropdown Menu
+  - Navigation Menu
+  - Popover
+  - Separator
+  - Slot
+  - Toast
+- **Lucide React** - Icon components
+- **GSAP** - Advanced animations
+- **Class Variance Authority** - Component variants
+- **Tailwind Merge** - Utility class merging
+- **Tailwind Animate** - Animation utilities
+
+### ⚡ Functionality
+- **EmailJS** - Email integration
+- **React Hot Toast** - Toast notifications
+- **Sharp** - Image optimization
+- **Vercel Analytics & Speed Insights** - Performance monitoring
+
+## 📁 Project Structure
+```
+├── app/
+│   ├── layout.tsx        # Root layout
+│   ├── page.tsx          # Home page
+│   ├── globals.css       # Global styles
+│   ├── fonts.ts          # Font configurations
+│   └── metadata.ts       # SEO configuration
+├── components/
+│   ├── layout/          
+│   │   ├── navbar.tsx    # Navigation
+│   │   ├── footer.tsx    # Footer
+│   │   └── socialSidebar.tsx # Social links & accessibility
+│   ├── sections/         # Page sections
+│   └── ui/              # Reusable UI components
+├── data/                # Static data
+└── public/              # Static assets
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Getting Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Prerequisites
+- Node.js 20+ (recommended)
+- npm or yarn
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Installation
 
-## Learn More
+1. Clone the repository
+```bash
+git clone https://github.com/drewfoos/portfolio.git
+cd portfolio
+```
 
-To learn more about Next.js, take a look at the following resources:
+2. Install dependencies
+```bash
+npm install
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Set up environment variables
+```bash
+cp .env.example .env.local
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Required environment variables:
+```
+NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
+NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
+NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
+```
 
-## Deploy on Vercel
+4. Run development server
+```bash
+npm run dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+5. Open [http://localhost:3000](http://localhost:3000)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📜 Available Scripts
+
+```bash
+npm run dev        # Start development server
+npm run build     # Build for production
+npm run start     # Start production server
+npm run lint      # Run ESLint
+```
+
+## ♿ Accessibility
+
+The portfolio prioritizes accessibility with:
+- Dynamic font sizing
+- High contrast mode
+- Screen reader support
+- Keyboard navigation
+- ARIA labels
+- Semantic HTML structure
+
+## 📈 Performance
+
+Optimized for speed and performance through:
+- Next.js App Router
+- Image optimization with Sharp
+- Analytics integration
+- Speed monitoring
+- Responsive design
+
+## 📫 Contact
+
+- Email: dryfoosa@gmail.com
+- LinkedIn: [andrew-dryfoos](https://www.linkedin.com/in/andrew-dryfoos/)
+- GitHub: [@drewfoos](https://github.com/drewfoos)
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
