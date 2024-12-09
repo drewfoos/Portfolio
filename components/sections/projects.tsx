@@ -118,7 +118,7 @@ export default function Projects({ projects }: ProjectsProps) {
   );
 
   return (
-    <section className="relative overflow-hidden py-12 md:py-20">
+    <section className="relative overflow-hidden">
       {/* Mobile-only title */}
       <div className="px-4 mb-6 md:hidden">
         <h2 className="text-2xl font-bold text-white text-center">

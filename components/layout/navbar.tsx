@@ -32,18 +32,18 @@ export default function NavBar() {
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink href="#tech-stack" className="text-white hover:text-[#D017B8] transition-colors">
-                Tech Stack
+              <NavigationMenuLink href="#experience" className="text-white hover:text-[#D017B8] transition-colors">
+                Experience
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuLink href="#skills" className="text-white hover:text-[#D017B8] transition-colors">
-                Skills
+                Technical Skills
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink href="#experience" className="text-white hover:text-[#D017B8] transition-colors">
-                Experience
+              <NavigationMenuLink href="#contact" className="text-white hover:text-[#D017B8] transition-colors">
+                Contact Me
               </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
@@ -72,13 +72,13 @@ export default function NavBar() {
               Projects
             </a>
             <a href="#tech-stack" onClick={toggleMenu} className="hover:text-[#D017B8] transition-colors py-2">
-              Tech Stack
+              Experience
             </a>
             <a href="#skills" onClick={toggleMenu} className="hover:text-[#D017B8] transition-colors py-2">
-              Skills
+              Technical Skills
             </a>
-            <a href="#experience" onClick={toggleMenu} className="hover:text-[#D017B8] transition-colors py-2">
-              Experience
+            <a href="#contact" onClick={toggleMenu} className="hover:text-[#D017B8] transition-colors py-2">
+              Contact Me
             </a>
           </div>
         </div>

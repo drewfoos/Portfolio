@@ -2,6 +2,7 @@
 import { MailIcon, MapPinIcon } from 'lucide-react';
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import toast from 'react-hot-toast';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,13 +13,22 @@ import {
 const navItems = [
   { label: "About me", href: "#about" },
   { label: "Projects", href: "#projects" },
-  { label: "Tech stack", href: "#tech" },
-  { label: "Skills", href: "#skills" },
-  { label: "Experience", href: "#experience" }
+  { label: "Experience", href: "#experience" },
+  { label: "Technical Skills", href: "#skills" },
+  { label: "Contact Me", href: "#contact" }
 ];
 
 export const Footer = () => {
   const email = "dryfoosa@gmail.com";
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(email);
+      toast.success('Email copied to clipboard!');
+    } catch (error) {
+      toast.error('Failed to copy email');
+    }
+  };
  
   return (
     <footer className="w-full bg-[#0B0B0B]">
@@ -50,7 +60,7 @@ export const Footer = () => {
                 <span className="text-sm sm:text-base">{email}</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent 
+            <DropdownMenuContent
               className="w-52 bg-[#0B0B0B] border-purple-600"
               align="center"
             >
@@ -67,10 +77,7 @@ export const Footer = () => {
                 Open in Gmail
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => {
-                  navigator.clipboard.writeText(email);
-                  // You might want to add a toast notification here
-                }}
+                onClick={handleCopyEmail}
                 className="text-white hover:bg-purple-600 hover:text-white focus:bg-purple-600 focus:text-white cursor-pointer"
               >
                 Copy Email Address

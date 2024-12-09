@@ -6,6 +6,8 @@ import Projects from '@/components/sections/projects'
 import About from '@/components/sections/about'
 import { Contact } from '@/components/sections/contact'
 import { projects } from '@/data/projects'
+import ExperienceHistory from '@/components/sections/experienceHistory'
+import Skills from '@/components/sections/skills'
 
 export default function Home() {
   return (
@@ -21,10 +23,29 @@ export default function Home() {
         transition={{ duration: 0.5 }}
         className="relative z-10"
       >
-        <Hero />
-        <About />
-        <Projects projects={projects} />
-        <Contact />
+        <section id="home" className="scroll-mt-20">
+          <Hero />
+        </section>
+        
+        <section id="about" className="scroll-mt-20">
+          <About />
+        </section>
+        
+        <section id="projects" className="scroll-mt-20">
+          <Projects projects={projects} />
+        </section>
+        
+        <section id="experience" className="scroll-mt-20">
+          <ExperienceHistory />
+        </section>
+        
+        <section id="skills" className="scroll-mt-20">
+          <Skills />
+        </section>
+        
+        <section id="contact" className="scroll-mt-20">
+          <Contact />
+        </section>
       </motion.div>
     </motion.main>
   );
