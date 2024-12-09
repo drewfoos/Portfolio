@@ -67,5 +67,14 @@ export const projects: Project[] = [
     tags: ["Inclusion", "Advocacy", "Education"],
     liveUrl: "https://llskillstraining.org",
     figmaUrl: "https://www.figma.com/design/gOx6RuAv9mQ7oRgCRuFdfS/Lifelong-Skill-Wireframes-V2?node-id=0-1&t=9qwyV9wEU0jvYez5-1"
-  }
+  },
+  {
+    "id": 8,
+    "title": "Stellar Escape",
+    "description": "A WordPress website and game trailer for Stellar Escape, created in Unreal Engine 5. Worked on blueprint scripting, 3D modeling, and video production to showcase the immersive gameplay and narrative.",
+    "imageUrl": "/projects/stellar_escape_mockup.png",
+    "category": "Game Development",
+    "tags": ["Unreal Engine 5", "Blueprints", "3D Modeling"],
+    "liveUrl": "https://stellarescape.net/"
+  }  
 ] 
