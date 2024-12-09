@@ -12,60 +12,57 @@ import Script from 'next/script'
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { usePathname } from 'next/navigation'
 
-export default function ClientLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const pathname = usePathname();
-  const is404 = pathname !== '/' && pathname !== '/projects';  // Add other valid routes as needed
-
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "url": "https://andrewdryfoos.dev",
-    "name": "Andrew Dryfoos",
-    "description": "Portfolio and personal website of Andrew Dryfoos - Software Engineer, Developer, and Tech Enthusiast",
-    "publisher": {
-      "@type": "Person",
-      "name": "Andrew Dryfoos"
-    }
+export default function ClientLayout({ children }: { children: React.ReactNode }) {
+    const pathname = usePathname();
+    const is404 = pathname !== '/' && pathname !== '/projects'; // Add other valid routes as needed
+  
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "url": "https://andrewdryfoos.dev",
+      "name": "Andrew Dryfoos",
+      "description": "Portfolio and personal website of Andrew Dryfoos - Software Engineer, Developer, and Tech Enthusiast",
+      "publisher": {
+        "@type": "Person",
+        "name": "Andrew Dryfoos",
+      },
+    };
+  
+    return (
+      <html lang="en" className={`scroll-smooth ${axiforma.variable}`} suppressHydrationWarning>
+        <head>
+          <Script
+            id="structured-data"
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+            strategy="beforeInteractive"
+          />
+        </head>
+        <body className="min-h-screen flex flex-col bg-[#0B0B0B]">
+          <Suspense fallback={null}>
+            <Analytics />
+            <SpeedInsights />
+          </Suspense>
+         
+          <Toaster
+            position="top-center"
+            toastOptions={{
+              duration: 4000,
+            }}
+          />
+         
+          {!is404 && (
+            <>
+              <SocialSidebar />
+              <Navbar />
+            </>
+          )}
+          <main className="relative flex-grow">
+            {children}
+          </main>
+          {!is404 && <Footer />}
+        </body>
+      </html>
+    );
   }
-
-  return (
-    <html lang="en" className={`scroll-smooth ${axiforma.variable}`} suppressHydrationWarning>
-      <head>
-        <Script
-          id="structured-data"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-          strategy="beforeInteractive"
-        />
-      </head>
-      <body className="min-h-screen flex flex-col bg-[#0B0B0B]">
-        <Suspense fallback={null}>
-          <Analytics />
-          <SpeedInsights />
-        </Suspense>
-       
-        <Toaster
-          position="top-center"
-          toastOptions={{
-            duration: 4000,
-          }}
-        />
-       
-        {!is404 && (
-          <>
-            <SocialSidebar />
-            <Navbar />
-          </>
-        )}
-        <main className="relative flex-grow">
-          {children}
-        </main>
-        {!is404 && <Footer />}
-      </body>
-    </html>
-  );
-}
+  

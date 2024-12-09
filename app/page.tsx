@@ -1,4 +1,3 @@
-// app/page.tsx
 'use client'
 import { motion } from 'framer-motion'
 import Hero from '@/components/sections/hero'
@@ -11,7 +10,7 @@ import Skills from '@/components/sections/skills'
 
 export default function Home() {
   return (
-    <motion.main
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -47,6 +46,6 @@ export default function Home() {
           <Contact />
         </section>
       </motion.div>
-    </motion.main>
+    </motion.div>
   );
 }
