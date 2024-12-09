@@ -25,7 +25,7 @@ export const Footer = () => {
     try {
       await navigator.clipboard.writeText(email);
       toast.success('Email copied to clipboard!');
-    } catch (error) {
+    } catch {
       toast.error('Failed to copy email');
     }
   };
