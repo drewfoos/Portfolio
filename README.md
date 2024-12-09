@@ -40,7 +40,7 @@ A modern, accessible portfolio website built with Next.js 15, featuring interact
 - **Framer Motion 10** - Smooth animations
 
 ### 🧩 UI Components & Styling
-- **Radix UI** - Headless UI components
+- **Shadcn UI** - Headless UI components
   - Dialog
   - Dropdown Menu
   - Navigation Menu
