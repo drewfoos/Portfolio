@@ -380,7 +380,7 @@ const handleAccessibilityChange = (open: boolean) => {
               </button>
             </PopoverTrigger>
             <PopoverContent
-              className="w-52 bg-[#0B0B0B] border-purple-600 p-2"
+              className="w-52 bg-[#0B0B0B] border-purple-600 p-2 [&_button:focus-visible]:outline-none [&_button:focus-visible]:ring-0"
               side="right"
               onCloseAutoFocus={(e) => e.preventDefault()}
             >
@@ -437,7 +437,7 @@ const handleAccessibilityChange = (open: boolean) => {
               </button>
             </PopoverTrigger>
             <PopoverContent
-              className="w-72 bg-[#0B0B0B] border-purple-600 p-4"
+              className="w-72 bg-[#0B0B0B] border-purple-600 p-4 [&_button:focus-visible]:outline-none [&_button:focus-visible]:ring-0"
               side="right"
               onCloseAutoFocus={(e) => e.preventDefault()}
             >
