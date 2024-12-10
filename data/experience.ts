@@ -39,7 +39,7 @@ export interface Experience {
       link: "https://www.elon.edu/u/academics/arts-and-sciences/computing-sciences/"
     },
     {
-      title: "Internee",
+      title: "Software Engineer Intern",
       year: "2022",
       institution: "The New York Times",
       location: "New York, USA",
