@@ -1,80 +1,81 @@
 'use client'
-import { motion } from 'framer-motion'
-import { useEffect } from 'react'
+import { Suspense, lazy } from 'react'
+import { LazyMotion, domAnimation, m } from 'framer-motion'
+import dynamic from 'next/dynamic'
 import Hero from '@/components/sections/hero'
-import Projects from '@/components/sections/projects'
-import About from '@/components/sections/about'
-import { Contact } from '@/components/sections/contact'
 import { projects } from '@/data/projects'
-import ExperienceHistory from '@/components/sections/experienceHistory'
-import Skills from '@/components/sections/skills'
+
+// Lazy load components
+const Projects = lazy(() => import('@/components/sections/projects'))
+const About = lazy(() => import('@/components/sections/about'))
+const Contact = lazy(() => import('@/components/sections/contact').then(mod => ({ default: mod.Contact })))
+const ExperienceHistory = lazy(() => import('@/components/sections/experienceHistory'))
+const Skills = lazy(() => import('@/components/sections/skills'))
+
+// Create a client-only motion wrapper
+const ClientMotionDiv = dynamic(
+  () => Promise.resolve(m.div),
+  { ssr: false }
+)
 
 export default function Home() {
-  useEffect(() => {
-      console.log(`
-      _________            .___                       
-      \\_   ___ \\  ____   __| _/____                   
-      /    \\  \\/ /  _ \\ / __ |/ __ \\                  
-      \\     \\___(  <_> ) /_/ \\  ___/                  
-       \\______  /\\____/\\____ |\\___  >                 
-              \\/            \\/    \\/                  
-       __      __.__  __  .__                         
-      /  \\    /  \\__|/  |_|  |__                      
-      \\   \\/\\/   /  \\   __\\  |  \\                     
-       \\        /|  ||  | |   Y  \\                    
-        \\__/\\  / |__||__| |___|  /                    
-             \\/                \\/                     
-         _____              .___                      
-        /  _  \\   ____    __| _/______   ______  _  __
-       /  /_\\  \\ /    \\  / __ |\\_  __ \\_/ __ \\ \\/ \\/ /
-      /    |    \\   |  \\/ /_/ | |  | \\/\\  ___/\\     / 
-      \\____|__  /___|  /\\____ | |__|    \\___  >\\/\\_/  
-              \\/     \\/      \\/             \\/        
-  
-      Welcome to Andrew Dryfoos's Portfolio!
-      Explore more at: https://github.com/drewfoos
-      If you're a developer, you're awesome! 😎
-    `);
-  }, []); // Empty dependency array ensures it only runs once after mount
-    
-
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="min-h-screen bg-[#0B0B0B] relative overflow-hidden"
-    >
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+    <LazyMotion features={domAnimation}>
+      <ClientMotionDiv
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: { opacity: 0 },
+          visible: { opacity: 1 }
+        }}
         transition={{ duration: 0.5 }}
-        className="relative z-10"
+        className="min-h-screen bg-[#0B0B0B] relative overflow-hidden"
       >
-        <section id="home" className="scroll-mt-20">
-          <Hero />
-        </section>
-        
-        <section id="about" className="scroll-mt-20">
-          <About />
-        </section>
-        
-        <section id="projects" className="scroll-mt-20">
-          <Projects projects={projects} />
-        </section>
-        
-        <section id="experience" className="scroll-mt-20">
-          <ExperienceHistory />
-        </section>
-        
-        <section id="skills" className="scroll-mt-20">
-          <Skills />
-        </section>
-        
-        <section id="contact" className="scroll-mt-20">
-          <Contact />
-        </section>
-      </motion.div>
-    </motion.div>
+        <ClientMotionDiv
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0 }
+          }}
+          transition={{ duration: 0.5 }}
+          className="relative z-10"
+        >
+          <section id="home" className="scroll-mt-20">
+            <Hero />
+          </section>
+       
+          <Suspense fallback={<div className="min-h-screen" />}>
+            <section id="about" className="scroll-mt-20">
+              <About />
+            </section>
+          </Suspense>
+       
+          <Suspense fallback={<div className="min-h-screen" />}>
+            <section id="projects" className="scroll-mt-20">
+              <Projects projects={projects} />
+            </section>
+          </Suspense>
+       
+          <Suspense fallback={<div className="min-h-screen" />}>
+            <section id="experience" className="scroll-mt-20">
+              <ExperienceHistory />
+            </section>
+          </Suspense>
+       
+          <Suspense fallback={<div className="min-h-screen" />}>
+            <section id="skills" className="scroll-mt-20">
+              <Skills />
+            </section>
+          </Suspense>
+       
+          <Suspense fallback={<div className="min-h-screen" />}>
+            <section id="contact" className="scroll-mt-20">
+              <Contact />
+            </section>
+          </Suspense>
+        </ClientMotionDiv>
+      </ClientMotionDiv>
+    </LazyMotion>
   );
 }

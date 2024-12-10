@@ -304,7 +304,7 @@ const handleAccessibilityChange = (open: boolean) => {
         }
       `}</style>
 
-      {/* Toggle button to show/hide sidebar when hero not visible */}
+      {/* Toggle button with improved accessibility */}
       <motion.button
         className="fixed left-0 top-1/4 z-50 p-2 bg-purple-600 text-white rounded-r-md hidden lg:flex items-center justify-center"
         initial={false}
@@ -318,12 +318,11 @@ const handleAccessibilityChange = (open: boolean) => {
             clearTimeout(hoverOutTimeout.current);
             hoverOutTimeout.current = null;
           }
-          console.log("Toggle button clicked. Setting isHovering(true)");
           setIsHovering(true);
         }}
-        aria-label="Expand sidebar"
+        aria-label="Expand navigation sidebar"
       >
-        <ChevronRight size={20} />
+        <ChevronRight size={20} aria-hidden="true" />
       </motion.button>
 
       <motion.aside
@@ -340,42 +339,52 @@ const handleAccessibilityChange = (open: boolean) => {
           stiffness: 300,
           damping: 30,
         }}
+        role="navigation"
+        aria-label="Social media and accessibility navigation"
       >
         <div className="flex flex-col space-y-4">
-          {/* Just hover BG, no scaling */}
+          {/* GitHub link with improved accessibility */}
           <a
             href="https://github.com/drewfoos"
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 rounded-md text-white hover:bg-purple-600 transition-all duration-200 group"
+            aria-label="Visit my GitHub profile"
           >
             <GithubIcon
               size={24}
               className="group-hover:rotate-12 transition-transform"
+              aria-hidden="true"
             />
           </a>
 
+          {/* LinkedIn link with improved accessibility */}
           <a
             href="https://www.linkedin.com/in/andrew-dryfoos/"
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 rounded-md text-white hover:bg-purple-600 transition-all duration-200 group"
+            aria-label="Visit my LinkedIn profile"
           >
             <LinkedinIcon
               size={24}
               className="group-hover:rotate-12 transition-transform"
+              aria-hidden="true"
             />
           </a>
 
+          {/* Email Popover with improved accessibility */}
           <Popover onOpenChange={handleEmailDropdownChange}>
             <PopoverTrigger asChild>
               <button
                 className="p-2 rounded-md text-white hover:bg-purple-600 transition-all duration-200 group"
                 onMouseDown={preventDefaultMouseDown}
+                aria-label="Email contact options"
               >
                 <Mail
                   size={24}
                   className="group-hover:rotate-12 transition-transform"
+                  aria-hidden="true"
                 />
               </button>
             </PopoverTrigger>
@@ -383,27 +392,27 @@ const handleAccessibilityChange = (open: boolean) => {
               className="w-52 bg-[#0B0B0B] border-purple-600 p-2 [&_button:focus-visible]:outline-none [&_button:focus-visible]:ring-0"
               side="right"
               onCloseAutoFocus={(e) => e.preventDefault()}
+              role="menu"
             >
               <div className="flex flex-col space-y-2">
                 <button
                   onClick={() => window.open(`mailto:${email}`)}
                   className="w-full text-left px-2 py-1.5 text-white hover:bg-purple-600 hover:text-white rounded-sm cursor-pointer"
+                  role="menuitem"
                 >
                   Open in Email Client
                 </button>
                 <button
-                  onClick={() =>
-                    window.open(
-                      `https://mail.google.com/mail/?view=cm&fs=1&to=${email}`
-                    )
-                  }
+                  onClick={() => window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email}`)}
                   className="w-full text-left px-2 py-1.5 text-white hover:bg-purple-600 hover:text-white rounded-sm cursor-pointer"
+                  role="menuitem"
                 >
                   Open in Gmail
                 </button>
                 <button
                   onClick={handleCopyEmail}
                   className="w-full text-left px-2 py-1.5 text-white hover:bg-purple-600 hover:text-white rounded-sm cursor-pointer"
+                  role="menuitem"
                 >
                   Copy Email Address
                 </button>
@@ -411,18 +420,21 @@ const handleAccessibilityChange = (open: boolean) => {
             </PopoverContent>
           </Popover>
 
+          {/* Terminal button with improved accessibility */}
           <button
             onClick={() => setShowSecret(true)}
             className="p-2 rounded-md text-white hover:bg-purple-600 transition-all duration-200 cursor-pointer group"
-            aria-label="Open secret terminal"
+            aria-label="Open command terminal"
             onMouseDown={preventDefaultMouseDown}
           >
             <Terminal
               size={24}
               className="group-hover:rotate-12 transition-transform"
+              aria-hidden="true"
             />
           </button>
 
+          {/* Accessibility options with improved labeling */}
           <Popover onOpenChange={handleAccessibilityChange}>
             <PopoverTrigger asChild>
               <button
@@ -433,6 +445,7 @@ const handleAccessibilityChange = (open: boolean) => {
                 <Glasses
                   size={24}
                   className="group-hover:rotate-12 transition-transform"
+                  aria-hidden="true"
                 />
               </button>
             </PopoverTrigger>
@@ -440,19 +453,22 @@ const handleAccessibilityChange = (open: boolean) => {
               className="w-72 bg-[#0B0B0B] border-purple-600 p-4 [&_button:focus-visible]:outline-none [&_button:focus-visible]:ring-0"
               side="right"
               onCloseAutoFocus={(e) => e.preventDefault()}
+              role="dialog"
+              aria-label="Accessibility settings"
             >
               <div className="space-y-4">
-                <h3 className="font-medium text-white">
+                <h3 className="font-medium text-white" id="accessibility-title">
                   Accessibility Options
                 </h3>
                 <div>
-                  <p className="text-sm text-gray-400 mb-2">Text Size</p>
-                  <div className="flex gap-2">
+                  <p className="text-sm text-gray-400 mb-2" id="text-size-label">Text Size</p>
+                  <div className="flex gap-2" role="group" aria-labelledby="text-size-label">
                     <button
                       onClick={decreaseTextSize}
                       className="px-4 py-2 bg-purple-600 text-white rounded-md hover:opacity-90 transition-opacity"
                       aria-label="Decrease text size"
                       onMouseDown={preventDefaultMouseDown}
+                      disabled={fontScale === 0}
                     >
                       A-
                     </button>
@@ -461,27 +477,30 @@ const handleAccessibilityChange = (open: boolean) => {
                       className="px-4 py-2 bg-purple-600 text-white rounded-md hover:opacity-90 transition-opacity"
                       aria-label="Increase text size"
                       onMouseDown={preventDefaultMouseDown}
+                      disabled={fontScale === 2}
                     >
                       A+
                     </button>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <p className="text-sm text-gray-400">Display Settings</p>
-                  <button
-                    onClick={toggleHighContrast}
-                    className="w-full px-4 py-2 bg-purple-600 text-white rounded-md hover:opacity-90 transition-opacity"
-                    onMouseDown={preventDefaultMouseDown}
-                  >
-                    Toggle High Contrast
-                  </button>
-                  <button
-                    onClick={toggleDyslexicFont}
-                    className="w-full px-4 py-2 bg-purple-600 text-white rounded-md hover:opacity-90 transition-opacity"
-                    onMouseDown={preventDefaultMouseDown}
-                  >
-                    {dyslexicFont ? "Disable" : "Enable"} Dyslexic Font
-                  </button>
+                  <p className="text-sm text-gray-400" id="display-settings-label">Display Settings</p>
+                  <div role="group" aria-labelledby="display-settings-label">
+                    <button
+                      onClick={toggleHighContrast}
+                      className="w-full px-4 py-2 bg-purple-600 text-white rounded-md hover:opacity-90 transition-opacity"
+                      onMouseDown={preventDefaultMouseDown}
+                    >
+                      Toggle High Contrast
+                    </button>
+                    <button
+                      onClick={toggleDyslexicFont}
+                      className="w-full px-4 py-2 bg-purple-600 text-white rounded-md hover:opacity-90 transition-opacity mt-2"
+                      onMouseDown={preventDefaultMouseDown}
+                    >
+                      {dyslexicFont ? "Disable" : "Enable"} Dyslexic Font
+                    </button>
+                  </div>
                 </div>
               </div>
             </PopoverContent>
@@ -489,6 +508,8 @@ const handleAccessibilityChange = (open: boolean) => {
         </div>
       </motion.aside>
 
+
+      {/* Terminal Dialog with improved close button */}
       <Dialog open={showSecret} onOpenChange={setShowSecret}>
         <DialogContent className="bg-[#0B0B0B] border-purple-600 max-w-2xl">
           <DialogHeader>
@@ -499,7 +520,7 @@ const handleAccessibilityChange = (open: boolean) => {
             </DialogDescription>
             <button
               onClick={() => setShowSecret(false)}
-              className="text-gray-400 hover:text-white transition-colors absolute top-4 right-4"
+              className="text-gray-400 hover:text-white transition-colors absolute top-2 right-2 p-2 focus:outline-none focus-visible:outline-none rounded-sm"
               aria-label="Close terminal"
               onMouseDown={preventDefaultMouseDown}
             >
@@ -507,22 +528,24 @@ const handleAccessibilityChange = (open: boolean) => {
             </button>
           </DialogHeader>
 
-          <div className="font-mono space-y-4 max-h-[60vh] overflow-y-auto terminal-scroll">
+          <div 
+            className="font-mono space-y-4 max-h-[60vh] overflow-y-auto terminal-scroll"
+            role="log"
+            aria-live="polite"
+          >
             <p className="text-purple-600">Welcome to the terminal!</p>
 
             {history.map((entry, index) => (
               <div
                 key={index}
-                className={
-                  entry.type === "input" ? "text-purple-600" : "text-white ml-4"
-                }
+                className={entry.type === "input" ? "text-purple-600" : "text-white ml-4"}
               >
                 {entry.content}
               </div>
             ))}
 
             <div className="flex items-center">
-              <span className="text-purple-600">$</span>
+              <span className="text-purple-600" aria-hidden="true">$</span>
               <input
                 type="text"
                 value={input}
