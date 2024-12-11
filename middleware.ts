@@ -6,20 +6,12 @@ export function middleware(request: NextRequest) {
 
   const cspHeader = `
     default-src 'self';
-    script-src 'nonce-${nonce}' 'strict-dynamic' 
-      https://vercel.live 
-      https://*.vercel-insights.com 
-      https://*.vercel-analytics.com;
+    script-src 'self' 'nonce-${nonce}' https://*.vercel.com https://*.vercel-insights.com https://*.vercel-analytics.com;
     style-src 'self' 'unsafe-inline';
     img-src 'self' data: blob:;
     font-src 'self' https://fonts.gstatic.com;
-    connect-src 'self' 
-      https://*.vercel.com 
-      https://api.emailjs.com;
-    frame-src 'self' 
-      https://drive.google.com 
-      https://*.figma.com 
-      https://mail.google.com;
+    connect-src 'self' https://*.vercel.com https://api.emailjs.com;
+    frame-src 'self' https://drive.google.com https://*.figma.com https://mail.google.com;
     form-action 'self' https://api.emailjs.com;
     object-src 'none';
     base-uri 'self';
@@ -27,6 +19,7 @@ export function middleware(request: NextRequest) {
     upgrade-insecure-requests;
   `.replace(/\s{2,}/g, ' ').trim();
 
+  // Skip applying CSP for specific routes
   if (request.nextUrl.pathname === '/api/og') {
     return NextResponse.next();
   }
