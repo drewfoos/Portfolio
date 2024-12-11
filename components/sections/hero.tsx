@@ -15,15 +15,15 @@ const GradientGlow: FC = () => (
 
 export const Hero: FC = () => {
   const headlineWords = ['Discover,', 'Design,', 'Develop,', 'Stand out.'];
-  
+ 
   return (
     <section id="hero" className={`
-      ${axiforma.variable} 
-      min-h-screen 
-      bg-[#0B0B0B] 
-      relative 
-      overflow-hidden 
-      pb-12 
+      ${axiforma.variable}
+      min-h-screen
+      bg-[#0B0B0B]
+      relative
+      overflow-hidden
+      pb-12
       md:pb-16
       landscape:pb-0
       landscape:h-screen
@@ -35,8 +35,9 @@ export const Hero: FC = () => {
             src="/Bg.svg"
             alt="Illustration of a mountain landscape in the background"
             fill
+            sizes="100vw"
             className="absolute inset-0 object-cover opacity-100 mix-blend-normal"
-            priority
+            loading="lazy"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-50" />
         </div>
@@ -47,7 +48,7 @@ export const Hero: FC = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1.2, ease: 'easeInOut' }}
+          transition={{ duration: 0.8, ease: 'easeInOut' }}
           className="w-full max-w-[1200px] mx-auto relative"
         >
           {/* Gradient Glows */}

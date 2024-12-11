@@ -339,7 +339,6 @@ const handleAccessibilityChange = (open: boolean) => {
           stiffness: 300,
           damping: 30,
         }}
-        role="navigation"
         aria-label="Social media and accessibility navigation"
       >
         <div className="flex flex-col space-y-4">

@@ -47,6 +47,7 @@ const config: NextConfig = {
       // Optimize chunk splitting
       config.optimization = {
         ...config.optimization,
+        moduleIds: 'deterministic',
         splitChunks: {
           chunks: 'all',
           minSize: 20000,
