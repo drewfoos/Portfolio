@@ -20,11 +20,14 @@ const config: NextConfig = {
     return [
       {
         source: '/:all*(svg|jpg|jpeg|png|webp|avif|gif|ico|js|css|woff|woff2)',
-        locale: false,
         headers: [
           {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable'
+          },
+          {
+            key: 'Priority',
+            value: 'high'
           }
         ]
       }
