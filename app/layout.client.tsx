@@ -16,11 +16,11 @@ const SocialSidebar = lazy(() => import('@/components/layout/socialSidebar'))
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const is404 = pathname !== '/';
+  const isHome = pathname === '/';
 
   useEffect(() => {
     printConsoleArt();
-  }, []); // Empty dependency array ensures it only runs once
+  }, []);
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -47,23 +47,23 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <Analytics />
           <SpeedInsights />
         </Suspense>
-
+        
         <Suspense fallback={null}>
           <Toaster position="top-center" toastOptions={{ duration: 4000 }} />
         </Suspense>
 
-        {!is404 && (
+        {isHome && (
           <Suspense fallback={null}>
             <SocialSidebar />
             <Navbar />
           </Suspense>
         )}
-
+        
         <main className="relative flex-grow">
           {children}
         </main>
-
-        {!is404 && (
+        
+        {isHome && (
           <Suspense fallback={null}>
             <Footer />
           </Suspense>

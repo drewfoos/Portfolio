@@ -1,8 +1,9 @@
 // next.config.ts
 import type { NextConfig } from "next";
+import withBundleAnalyzer from '@next/bundle-analyzer';
 
-const nextConfig: NextConfig = {
-  // Image optimization settings - works well with Vercel's image optimization
+const config: NextConfig = {
+  // Image optimization settings
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 31536000,
@@ -10,7 +11,11 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 
-  // Caching headers - Vercel handles these efficiently
+  // Compression and optimization
+  compress: true,
+  poweredByHeader: false,
+
+  // Caching headers
   async headers() {
     return [
       {
@@ -26,14 +31,15 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // Optimize third-party packages
+  // Experimental features - only including supported options
   experimental: {
     optimizePackageImports: ['framer-motion', '@vercel/analytics', 'react-hot-toast'],
-    optimizeCss: true,
+    optimizeCss: true
   },
 
   // Webpack optimizations
   webpack: (config, { dev, isServer }) => {
+    // Production optimizations only
     if (!dev && !isServer) {
       // Optimize chunk splitting
       config.optimization = {
@@ -56,19 +62,35 @@ const nextConfig: NextConfig = {
               minChunks: 2,
               priority: 20
             },
-            // Add specific group for images
             images: {
               name: 'images',
               test: /\.(png|jpg|jpeg|gif|svg|webp|avif)$/,
               chunks: 'all',
               priority: 30
+            },
+            styles: {
+              name: 'styles',
+              test: /\.(css|scss)$/,
+              chunks: 'all',
+              enforce: true,
+              priority: 40
             }
           }
-        }
+        },
+        runtimeChunk: 'single'
       };
+
+      // Enable tree shaking
+      config.optimization.usedExports = true;
     }
+
     return config;
   }
 };
 
-export default nextConfig;
+// Wrap with bundle analyzer
+const withBundleAnalyzerConfig = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
+
+export default withBundleAnalyzerConfig(config);
