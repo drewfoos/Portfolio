@@ -1,15 +1,11 @@
-// app/layout.client.tsx
 'use client';
 import './globals.css';
-import { Toaster } from 'react-hot-toast';
-import { Analytics } from '@vercel/analytics/react';
 import Navbar from '@/components/layout/navbar';
 import Footer from '@/components/layout/footer';
 import SocialSidebar from '@/components/layout/socialSidebar';
-import { Suspense, useEffect } from 'react';
+import { useEffect } from 'react';
 import { axiforma } from '@/app/fonts';
 import Script from 'next/script';
-import { SpeedInsights } from '@vercel/speed-insights/next';
 import { usePathname } from 'next/navigation';
 import { printConsoleArt } from '@/utils/consoleArt';
 
@@ -50,11 +46,6 @@ export default function ClientLayout({ children, nonce }: ClientLayoutProps) {
         />
       </head>
       <body>
-        <Suspense fallback={<div className="text-white">Loading...</div>}>
-          <Analytics />
-          <SpeedInsights />
-        </Suspense>
-        <Toaster position="top-center" toastOptions={{ duration: 4000 }} />
         {!is404 && (
           <>
             <SocialSidebar />
