@@ -1,14 +1,23 @@
 // app/fonts.ts
 import localFont from 'next/font/local'
 
+// Axiforma configuration
 export const axiforma = localFont({
-  src: './fonts/Axiforma-Bold.otf',
+  src: [
+    {
+      path: './fonts/Axiforma-Bold.otf',
+      weight: '700',
+      style: 'normal',
+    }
+  ],
   variable: '--font-axiforma',
-  display: 'swap',  // Add this for better loading performance
-  preload: true,    // Add this to prioritize font loading
-  fallback: ['system-ui', 'arial'], // Add fallback fonts to prevent layout shifts
+  display: 'swap',
+  preload: true,
+  fallback: ['system-ui', 'arial', 'sans-serif'],
+  adjustFontFallback: "Arial",  // Changed to use valid value
 })
 
+// OpenDyslexic configuration
 export const openDyslexic = localFont({
   src: [
     {
@@ -25,5 +34,6 @@ export const openDyslexic = localFont({
   variable: '--font-dyslexic',
   display: 'swap',
   preload: true,
-  fallback: ['system-ui', 'arial']
+  fallback: ['system-ui', 'arial', 'sans-serif'],
+  adjustFontFallback: "Arial"  // Changed to use valid value
 })
