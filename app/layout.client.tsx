@@ -24,7 +24,7 @@ export default function ClientLayout({ children, nonce }: ClientLayoutProps) {
   }, []); // Runs only once after the component mounts
 
   return (
-    <html lang="en" className={`scroll-smooth ${axiforma.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`scroll-smooth ${axiforma.variable}`} >
       <head>
         <Script
           id="structured-data"

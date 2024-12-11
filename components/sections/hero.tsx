@@ -35,9 +35,9 @@ export const Hero: FC = () => {
             src="/Bg.svg"
             alt="Illustration of a mountain landscape in the background"
             fill
+            priority={true}
             sizes="100vw"
             className="absolute inset-0 object-cover opacity-100 mix-blend-normal"
-            loading="lazy"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-50" />
         </div>

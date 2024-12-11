@@ -10,10 +10,11 @@ const config: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
-
+  
   // Compression and optimization
   compress: true,
   poweredByHeader: false,
+  crossOrigin: 'anonymous',
 
   // Caching headers
   async headers() {
@@ -34,17 +35,28 @@ const config: NextConfig = {
     ];
   },
 
-  // Experimental features - only including supported options
+  // Experimental features
   experimental: {
-    optimizePackageImports: ['framer-motion', '@vercel/analytics', 'react-hot-toast'],
+    optimizePackageImports: [
+      'framer-motion',
+      'react-hot-toast',
+      'gsap',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-navigation-menu',
+      '@radix-ui/react-popover',
+      '@radix-ui/react-separator',
+      '@radix-ui/react-slot',
+      '@radix-ui/react-toast',
+      'lucide-react',
+      'react-icons'
+    ],
     optimizeCss: true
   },
 
   // Webpack optimizations
   webpack: (config, { dev, isServer }) => {
-    // Production optimizations only
     if (!dev && !isServer) {
-      // Optimize chunk splitting
       config.optimization = {
         ...config.optimization,
         moduleIds: 'deterministic',
@@ -57,8 +69,14 @@ const config: NextConfig = {
             vendors: false,
             framework: {
               name: 'framework',
-              test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+              test: /[\\/]node_modules[\\/](react|react-dom|next)[\\/]/,
               priority: 40,
+              enforce: true
+            },
+            radix: {
+              name: 'radix',
+              test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
+              priority: 35,
               enforce: true
             },
             commons: {
@@ -83,18 +101,13 @@ const config: NextConfig = {
         },
         runtimeChunk: 'single'
       };
-
-      // Enable tree shaking
       config.optimization.usedExports = true;
     }
-
     return config;
   }
 };
 
-// Wrap with bundle analyzer
-const withBundleAnalyzerConfig = withBundleAnalyzer({
+export default withBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
-});
-
-export default withBundleAnalyzerConfig(config);
+  openAnalyzer: false
+})(config);
