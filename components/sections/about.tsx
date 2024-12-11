@@ -60,7 +60,7 @@ export const About = () => {
               </div>
               <div className="border-l-2 border-white/20 pl-4">
                 <h4 className="text-xl font-medium">Bachelor&apos;s in Computer Science</h4>
-                <p className="text-gray-400">Elon University, 2013</p>
+                <p className="text-gray-400">Elon University, 2023</p>
                 <motion.div
                   initial={{ width: 0 }}
                   animate={isInView ? { width: "100%" } : { width: 0 }}

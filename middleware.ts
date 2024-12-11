@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+  // Skip CSP in development
+  if (process.env.NODE_ENV === 'development') {
+    return NextResponse.next();
+  }
 
+  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' https://*.vercel.com https://*.vercel-insights.com https://*.vercel-analytics.com;
@@ -30,7 +34,6 @@ export function middleware(request: NextRequest) {
   const response = NextResponse.next({
     request: { headers: requestHeaders },
   });
-
   response.headers.set('Content-Security-Policy', cspHeader);
   return response;
 }
