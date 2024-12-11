@@ -1,6 +1,5 @@
 // utils/consoleArt.ts
 export const printConsoleArt = () => {
-    if (typeof window !== "undefined") {
       console.log(`
       _________            .___                       
       \\_   ___ \\  ____   __| _/____                   
@@ -25,5 +24,4 @@ export const printConsoleArt = () => {
       Explore more at: https://github.com/drewfoos
       If you're a developer, you're awesome! 😎
     `);
-    }
   };

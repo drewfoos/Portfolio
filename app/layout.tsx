@@ -1,14 +1,17 @@
 // app/layout.tsx
-import { metadata, viewport } from './metadata'
-import ClientLayout from './layout.client'
+import { metadata, viewport } from './metadata';
+import ClientLayout from './layout.client';
+import { headers } from 'next/headers';
 
-export { metadata, viewport }
+export { metadata, viewport };
 
-// This is just a pass-through now
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  return <ClientLayout>{children}</ClientLayout>
+  const serverHeaders = await headers();
+  const nonce = serverHeaders.get('x-nonce') || '';
+
+  return <ClientLayout nonce={nonce}>{children}</ClientLayout>;
 }
