@@ -10,11 +10,10 @@ const config: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
-  
+
   // Compression and optimization
   compress: true,
   poweredByHeader: false,
-  crossOrigin: 'anonymous',
 
   // Caching headers
   async headers() {
@@ -35,10 +34,9 @@ const config: NextConfig = {
     ];
   },
 
-  // Experimental features
+  // Experimental features - only including supported options
   experimental: {
-    optimizePackageImports: [
-      'framer-motion',
+    optimizePackageImports: ['framer-motion',
       'react-hot-toast',
       'gsap',
       '@radix-ui/react-dialog',
@@ -49,14 +47,15 @@ const config: NextConfig = {
       '@radix-ui/react-slot',
       '@radix-ui/react-toast',
       'lucide-react',
-      'react-icons'
-    ],
-    optimizeCss: true
+      'react-icons'],
+    optimizeCss: true,
   },
 
   // Webpack optimizations
   webpack: (config, { dev, isServer }) => {
+    // Production optimizations only
     if (!dev && !isServer) {
+      // Optimize chunk splitting
       config.optimization = {
         ...config.optimization,
         moduleIds: 'deterministic',
@@ -69,14 +68,8 @@ const config: NextConfig = {
             vendors: false,
             framework: {
               name: 'framework',
-              test: /[\\/]node_modules[\\/](react|react-dom|next)[\\/]/,
+              test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
               priority: 40,
-              enforce: true
-            },
-            radix: {
-              name: 'radix',
-              test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
-              priority: 35,
               enforce: true
             },
             commons: {
@@ -101,13 +94,18 @@ const config: NextConfig = {
         },
         runtimeChunk: 'single'
       };
+
+      // Enable tree shaking
       config.optimization.usedExports = true;
     }
+
     return config;
   }
 };
 
-export default withBundleAnalyzer({
+// Wrap with bundle analyzer
+const withBundleAnalyzerConfig = withBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
-  openAnalyzer: false
-})(config);
+});
+
+export default withBundleAnalyzerConfig(config);
