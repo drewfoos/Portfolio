@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
 
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' https://*.vercel.com https://*.vercel-insights.com https://*.vercel-analytics.com;
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://*.vercel.com https://*.vercel-insights.com https://*.vercel-analytics.com;
     style-src 'self' 'unsafe-inline';
     img-src 'self' data: blob:;
     font-src 'self' https://fonts.gstatic.com;
@@ -17,9 +17,9 @@ export function middleware(request: NextRequest) {
     base-uri 'self';
     frame-ancestors 'none';
     upgrade-insecure-requests;
+    require-trusted-types-for 'script';
   `.replace(/\s{2,}/g, ' ').trim();
 
-  // Skip applying CSP for specific routes
   if (request.nextUrl.pathname === '/api/og') {
     return NextResponse.next();
   }
