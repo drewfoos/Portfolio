@@ -236,24 +236,26 @@ export default function Projects({ projects }: ProjectsProps) {
           ))}
         </div>
 
+        {/* Updated Navigation Buttons */}
         <div className="flex justify-center gap-6 mt-6">
           <Button
-            variant="ghost"
             onClick={() => scroll('left')}
-            className="text-white hover:bg-white/10 text-lg px-8 py-6 h-auto"
             disabled={!canScrollLeft}
+            aria-label="View previous projects"
+            className="flex items-center gap-2 text-white font-medium bg-white/10 px-8 py-4 rounded-full backdrop-blur-sm hover:bg-white/20 transition-all disabled:opacity-50 disabled:hover:bg-white/10 disabled:hover:scale-100"
           >
-            <ArrowLeft className="h-6 w-6 mr-3" />
-            Previous
+            <ArrowLeft className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+            <span>Previous</span>
           </Button>
+          
           <Button
-            variant="ghost"
             onClick={() => scroll('right')}
-            className="text-white hover:bg-white/10 text-lg px-8 py-6 h-auto"
             disabled={!canScrollRight}
+            aria-label="View more projects"
+            className="flex items-center gap-2 text-white font-medium bg-white/10 px-8 py-4 rounded-full backdrop-blur-sm hover:bg-white/20 transition-all disabled:opacity-50 disabled:hover:bg-white/10 disabled:hover:scale-100"
           >
-            Next
-            <ArrowRight className="h-6 w-6 ml-3" />
+            <span>Next</span>
+            <ArrowRight className="h-5 w-5 transition-transform group-hover:-translate-x-1" />
           </Button>
         </div>
       </div>
