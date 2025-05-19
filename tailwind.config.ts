@@ -1,83 +1,182 @@
-import type { Config } from "tailwindcss";
-export default {
-    darkMode: ["class"],
-    content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+// tailwind.config.js
+const { fontFamily } = require('tailwindcss/defaultTheme');
+
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: ["class"],
+  content: [
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
   ],
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
-        keyframes: {
-          scroll: {
-            '0%': { opacity: '1', transform: 'translateY(0)' },
-            '100%': { opacity: '0', transform: 'translateY(26px)' }
+      colors: {
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        // Add custom colors for your project
+        'brand': {
+          purple: {
+            light: '#D017B8',
+            DEFAULT: '#9333ea',
+            dark: '#1919A7',
           }
         },
-        animation: {
-          scroll: 'scroll 1.5s ease infinite'
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        sans: ["var(--font-sans)", ...fontFamily.sans],
+        axiforma: ["var(--font-axiforma)", ...fontFamily.sans],
+        dyslexic: ["var(--font-dyslexic)", ...fontFamily.sans],
+      },
+      keyframes: {
+        "accordion-down": {
+          from: { height: 0 },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
-        fontFamily: {
-          axiforma: ['var(--font-axiforma)'],
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: 0 },
         },
-        colors: {
-            background: 'hsl(var(--background))',
-            foreground: 'hsl(var(--foreground))',
-            // Add our custom colors
-            bg: {
-              main: 'hsl(var(--bg-main))',
-              secondary: 'hsl(var(--bg-secondary))',
-            },
-            brand: {
-              blue: 'hsl(var(--primary-blue))',
-              purple: 'hsl(var(--primary-purple))',
-            },
-            // Existing colors
-            card: {
-                DEFAULT: 'hsl(var(--card))',
-                foreground: 'hsl(var(--card-foreground))'
-            },
-            popover: {
-                DEFAULT: 'hsl(var(--popover))',
-                foreground: 'hsl(var(--popover-foreground))'
-            },
-            primary: {
-                DEFAULT: 'hsl(var(--primary))',
-                foreground: 'hsl(var(--primary-foreground))'
-            },
-            secondary: {
-                DEFAULT: 'hsl(var(--secondary))',
-                foreground: 'hsl(var(--secondary-foreground))'
-            },
-            muted: {
-                DEFAULT: 'hsl(var(--muted))',
-                foreground: 'hsl(var(--muted-foreground))'
-            },
-            accent: {
-                DEFAULT: 'hsl(var(--accent))',
-                foreground: 'hsl(var(--accent-foreground))'
-            },
-            destructive: {
-                DEFAULT: 'hsl(var(--destructive))',
-                foreground: 'hsl(var(--destructive-foreground))'
-            },
-            border: 'hsl(var(--border))',
-            input: 'hsl(var(--input))',
-            ring: 'hsl(var(--ring))',
-            chart: {
-                '1': 'hsl(var(--chart-1))',
-                '2': 'hsl(var(--chart-2))',
-                '3': 'hsl(var(--chart-3))',
-                '4': 'hsl(var(--chart-4))',
-                '5': 'hsl(var(--chart-5))'
-            }
+        fadeIn: {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 },
         },
-        borderRadius: {
-            lg: 'var(--radius)',
-            md: 'calc(var(--radius) - 2px)',
-            sm: 'calc(var(--radius) - 4px)'
-        }
-    }
+        fadeOut: {
+          '0%': { opacity: 1 },
+          '100%': { opacity: 0 },
+        },
+        floatUp: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+        pulse: {
+          '0%, 100%': { opacity: 1 },
+          '50%': { opacity: 0.5 },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-in": "fadeIn 0.5s ease-in-out forwards",
+        "fade-out": "fadeOut 0.5s ease-in-out forwards",
+        "float": "floatUp 3s ease-in-out infinite",
+        "pulse-slow": "pulse 3s ease-in-out infinite",
+      },
+      // Add text shadow utilities
+      textShadow: {
+        sm: '0 1px 2px rgba(0, 0, 0, 0.2)',
+        DEFAULT: '0 2px 4px rgba(0, 0, 0, 0.4)',
+        lg: '0 4px 8px rgba(0, 0, 0, 0.6)',
+      },
+      // Add custom responsive breakpoints if needed
+      screens: {
+        'xs': '475px',
+        // You can add more custom breakpoints here
+      },
+      // Add backdrop blur variations
+      backdropBlur: {
+        'xs': '2px',
+      },
+      // Add height utilities based on viewport height
+      height: {
+        'screen-small': '100svh',  // Small screen viewport height
+        'screen-dynamic': 'calc(var(--vh, 1vh) * 100)',
+      },
+      minHeight: {
+        'screen-small': '100svh',  // Small screen viewport height
+        'screen-dynamic': 'calc(var(--vh, 1vh) * 100)',
+      },
+    },
   },
-  plugins: [require("tailwindcss-animate")],
-} satisfies Config;
+  plugins: [
+    require("tailwindcss-animate"),
+    // Add custom plugins
+    function({ addUtilities }) {
+      const newUtilities = {
+        // Text shadow utilities
+        '.text-shadow-sm': {
+          textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)',
+        },
+        '.text-shadow': {
+          textShadow: '0 2px 4px rgba(0, 0, 0, 0.4)',
+        },
+        '.text-shadow-lg': {
+          textShadow: '0 4px 8px rgba(0, 0, 0, 0.6)',
+        },
+        '.text-shadow-none': {
+          textShadow: 'none',
+        },
+        // New backdrop blur utilities
+        '.backdrop-blur-sidebar': {
+          backdropFilter: 'blur(8px)',
+          '-webkit-backdrop-filter': 'blur(8px)',
+        },
+        // Text wrapping strategies
+        '.text-balance': {
+          textWrap: 'balance',
+        },
+        '.text-pretty': {
+          textWrap: 'pretty',
+        },
+        // Improved touch target
+        '.touch-target': {
+          minHeight: '44px',
+          minWidth: '44px',
+        },
+      };
+      addUtilities(newUtilities);
+    },
+    // Plugin to add viewport height fix
+    function({ addBase }) {
+      addBase({
+        ':root': {
+          '--vh': '1vh',
+        },
+      });
+    },
+  ],
+}
