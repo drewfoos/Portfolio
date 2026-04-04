@@ -34,6 +34,9 @@ const config: NextConfig = {
     ];
   },
 
+  // Turbopack config (default bundler in Next.js 16)
+  turbopack: {},
+
   // Experimental features - only including supported options
   experimental: {
     optimizePackageImports: ['framer-motion',
