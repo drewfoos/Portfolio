@@ -4,7 +4,7 @@ import Navbar from '@/components/layout/navbar';
 import Footer from '@/components/layout/footer';
 import SocialSidebar from '@/components/layout/socialSidebar';
 import { useEffect } from 'react';
-import { axiforma } from '@/app/fonts';
+import { axiforma, openDyslexic } from '@/app/fonts';
 import Script from 'next/script';
 import { usePathname } from 'next/navigation';
 import { printConsoleArt } from '@/utils/consoleArt';
@@ -24,7 +24,7 @@ export default function ClientLayout({ children, nonce }: ClientLayoutProps) {
   }, []); // Runs only once after the component mounts
 
   return (
-    <html lang="en" className={`scroll-smooth ${axiforma.variable}`} >
+    <html lang="en" className={`scroll-smooth ${axiforma.variable} ${openDyslexic.variable}`} >
       <head>
         <Script
           id="structured-data"

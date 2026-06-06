@@ -290,13 +290,13 @@ const handleAccessibilityChange = (open: boolean) => {
         }
 
         .font-size-scale-0 {
-          font-size: 16px !important;
+          font-size: 14px !important;
         }
         .font-size-scale-1 {
-          font-size: 18px !important;
+          font-size: 16px !important;
         }
         .font-size-scale-2 {
-          font-size: 20px !important;
+          font-size: 18px !important;
         }
 
         .high-contrast {

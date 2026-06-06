@@ -68,7 +68,7 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
+        sans: ["var(--font-sans, ui-sans-serif)", ...fontFamily.sans],
         axiforma: ["var(--font-axiforma)", ...fontFamily.sans],
         dyslexic: ["var(--font-dyslexic)", ...fontFamily.sans],
       },

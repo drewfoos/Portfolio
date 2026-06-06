@@ -4,26 +4,42 @@ import { Project } from '@/types/project'
 export const projects: Project[] = [
   {
     id: 1,
-    title: "Pokéshelf",
-    description: "A comprehensive website for Pokémon card collectors to browse all card sets, track their collections, and manage their Pokémon TCG inventory. Features an intuitive interface for viewing cards by set and tracking collection progress.",
-    imageUrl: "/projects/pokeshelf_mockup.png",
+    title: "EldenSmash",
+    description: "A full-stack swipe-voting app for 450+ Elden Ring characters that went viral on Reddit, reaching 70,000+ interactions in 4 days while staying up on serverless infrastructure. Features a resilient vote API with idempotency keys, per-user/IP rate limiting, request deduplication, anonymous-to-authenticated vote syncing via signed session cookies, real-time leaderboards, and server-rendered shareable profiles with dynamic OG image generation.",
+    imageUrl: "/projects/eldensmash.png",
     category: "Web Development",
-    tags: ["Pokémon TCG", "Next.js", "MongoDB"],
-    liveUrl: "https://www.pokeshelf.com/",
-    codeUrl: "https://github.com/drewfoos/PokeShelf"
+    tags: ["Next.js", "Serverless", "Full-Stack"],
+    liveUrl: "https://eldensmash.com"
   },
   {
     id: 2,
-    title: "RiftRadar Live Profile",
-    description: "A real-time analytics platform providing game statistics and performance insights for League of Legends players. RiftRadar helps players refine strategies, track progression, and understand gameplay dynamics through intuitive visualizations.",
-    imageUrl: "/projects/riftradar mockup.jpeg",
-    category: "Gaming",
-    tags: ["League of Legends", "Statistics", "Analytics"],
-    liveUrl: "https://rift-radar-v2.vercel.app/profile/na1/drewfoos-1471",
-    codeUrl: "https://github.com/drewfoos/RiftRadarV2"
+    title: "CoffeeJG Course Platform",
+    description: "A full-stack SaaS education platform for a content creator with Stripe-integrated payments (subscriptions + one-time), webhook-driven enrollment, and an admin CMS with a Plate.js rich text editor. Hardened with Turnstile bot protection, server-side session cookies with revocation checks, webhook signature verification, idempotent enrollment, and server-only video URL resolution. Includes a resource hub with 176+ curated assets, full-text search, tag/source filters, and a favorites system with optimistic UI.",
+    imageUrl: "/projects/coffeejg.png",
+    category: "Web Development",
+    tags: ["SaaS", "Stripe", "Next.js"],
+    liveUrl: "https://coffeejg-course.vercel.app"
   },
   {
     id: 3,
+    title: "Elon Esports SSBU Power Rankings",
+    description: "A tournament tracker for Elon University's esports club, replacing spreadsheets with a SQL-backed system managing 1,000+ records across players, tournaments, and head-to-head sets. Features a weighted scoring algorithm that normalizes placements across tournament sizes, atomic merge/unmerge via Postgres RPC functions with advisory locks, and start.gg GraphQL API integration for automated tournament imports with deferred set processing—cutting response times from 15s to 2s.",
+    imageUrl: "/projects/elonsmash.png",
+    category: "Web Development",
+    tags: ["PostgreSQL", "GraphQL", "Analytics"],
+    liveUrl: "https://elon-smash-pr.vercel.app"
+  },
+  {
+    id: 4,
+    title: "AI Smart Mirror — Graduate Capstone",
+    description: "An interactive installation built with a Raspberry Pi, camera, and one-way glass that captures a user's image, generates an AI portrait via the OpenAI API, and displays it as a reflection—designed as social commentary on bias in AI image generation. Featured at Elon University's Interactive Media Capstone Exhibition as a self-contained physical installation integrating hardware and software.",
+    imageUrl: "/projects/mirror.png",
+    category: "Hardware",
+    tags: ["OpenAI API", "Raspberry Pi", "HCI"],
+    paperUrl: "https://docs.google.com/document/d/1ja2UUgoGRKy37HRMvP2gG2jyHdiW57yv-9zDBrCXY8I/edit?usp=sharing"
+  },
+  {
+    id: 5,
     title: "Prescription Helper",
     description: "A modern, user-centric design crafted to streamline medication tracking and interaction management, leveraging intuitive analytics and sleek visuals for an enhanced user experience.",
     imageUrl: "/projects/mockuuups-free-iphone-15-pro-hand-mockup-min.png",
@@ -32,7 +48,7 @@ export const projects: Project[] = [
     figmaUrl: "https://www.figma.com/proto/4RuYK2Yp3pYHHTyqt6gHZE/prescrip?node-id=15-92&node-type=frame&t=pkuOJR6W1YYNO883-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=15%3A92&share=1"
   },
   {
-    id: 4,
+    id: 6,
     title: "League of Legends Interface Testing",
     description: "A comprehensive usability study examining the League of Legends client interface. The research includes user testing sessions, heuristic evaluation, and concrete recommendations for improving player experience.",
     imageUrl: "/projects/league redesign.png",
@@ -41,16 +57,7 @@ export const projects: Project[] = [
     paperUrl: "https://docs.google.com/document/d/1TTuPEVJqnhIaaSVB-AH0C0qml_GvalzQr-MVQmcB6co/edit?usp=sharing"
   },
   {
-    id: 5,
-    title: "Reflections of the Digital Self",
-    description: "An interactive smart mirror designed to explore AI's interpretations of human diversity, reflecting on biases in AI-generated perceptions. This project highlights the intersection of human-computer interaction and societal considerations in AI.",
-    imageUrl: "/projects/mirror.png",
-    category: "Hardware",
-    tags: ["AI", "HCI", "Hardware"],
-    paperUrl: "https://docs.google.com/document/d/1ja2UUgoGRKy37HRMvP2gG2jyHdiW57yv-9zDBrCXY8I/edit?usp=sharing"
-  },
-  {
-    id: 6,
+    id: 7,
     title: "This Portfolio",
     description: "This portfolio showcases my projects, including the source code and Figma design. It highlights my design and development skills, combining intuitive visuals with functional coding.",
     imageUrl: "/projects/portfolio mockup.jpeg",
@@ -68,14 +75,5 @@ export const projects: Project[] = [
     tags: ["Inclusion", "Advocacy", "Education"],
     liveUrl: "https://llskillstraining.org",
     figmaUrl: "https://www.figma.com/design/gOx6RuAv9mQ7oRgCRuFdfS/Lifelong-Skill-Wireframes-V2?node-id=0-1&t=9qwyV9wEU0jvYez5-1"
-  },
-  {
-    id: 9,
-    title: "Stellar Escape",
-    description: "A WordPress website and game trailer for Stellar Escape, created in Unreal Engine 5. Worked on blueprint scripting, 3D modeling, and video production to showcase the immersive gameplay and narrative.",
-    imageUrl: "/projects/stellar_escape_mockup.png",
-    category: "Game Development",
-    tags: ["Unreal Engine 5", "Blueprints", "3D Modeling"],
-    liveUrl: "https://stellarescape.net/"
   }
 ]

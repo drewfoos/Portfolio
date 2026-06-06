@@ -77,13 +77,12 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
   }
 }
 
 /* Accessibility Styles */
 :root {
-  --font-dyslexic: var(--font-dyslexic);
   transition: font-size 0.3s ease;
 }
 
@@ -96,6 +95,18 @@
   letter-spacing: 0.05em;
   word-spacing: 0.1em;
   line-height: 1.5;
+}
+
+/* OpenDyslexic is ~30% wider than Axiforma, so the hero headline (sized for
+   Axiforma) overflows/clips in dyslexic mode. Scale it down so it fits. */
+:root.dyslexic-font h1 > div {
+  font-size: clamp(2.5rem, 10vw, 8rem) !important;
+  letter-spacing: -0.04em;
+}
+@media (orientation: landscape) {
+  :root.dyslexic-font h1 > div {
+    font-size: clamp(2.5rem, 11vh, 8rem) !important;
+  }
 }
 
 /* Optional: Smooth transitions for all accessibility changes */
